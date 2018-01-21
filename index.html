@@ -1,7 +1,5 @@
 <html>
-
 <head>
-
 <style>
 
 body {
@@ -13,19 +11,19 @@ body {
   color: rgba(26,26,26,.7);
 }
 
-.lm {
+.inp-mrg {
   margin-left: 1em;
 }
 
-.iw {
+.inp-wth {
   width: 4em;
 }
 
-.ar {
+.aln-rt {
   text-align: right;
 }
 
-.bb {
+.bot-brd {
   border-bottom: 1px solid black;
 }
 
@@ -54,7 +52,7 @@ $( document ).ready(function() {
     showStep("step2");
   });
 
-  $("#step2Table input.erndInc, #step3Table input.unerndInc").on({
+  $("#step2Table input.earnedInc, #step3Table input.unearnedInc").on({
     "change": function () {
       calcIncome();
     }
@@ -67,11 +65,11 @@ $( document ).ready(function() {
 function loadStep2()
 {
   if ($("#yesSenior").prop("checked") == true) {
-    $("#erndIncGrossLabel").text("Gross monthly earned income:");
-    $("#erndIncNetRow").show();
+    $("#earnedIncGrossLabel").text("Gross monthly earned income:");
+    $("#earnedIncNetRow").show();
   } else {
-    $("#erndIncGrossLabel").text("Total monthly earned income:")
-    $("#erndIncNetRow").hide();
+    $("#earnedIncGrossLabel").text("Total monthly earned income:")
+    $("#earnedIncNetRow").hide();
   }
 }
 
@@ -103,33 +101,37 @@ function showStep(stepId) {
 }
 
 function calcIncome() {
-  var erndInc = 0;
-  erndInc += Number($("#erndIncWages").val());
-  erndInc += Number($("#erndIncTrainAllow").val());
-  erndInc += Number($("#erndIncSelfFarm").val());
-  erndInc += Number($("#erndIncBrdr").val());
-  erndInc += Number($("#erndIncRent").val());
-  $("#erndIncGross").val(round(erndInc, 0));
-  netErndInc = 0.8 * erndInc;
-  $("#erndIncNet").val(round(netErndInc, 0));
-  var unerndInc = 0;
-  unerndInc += Number($("#unerndIncBenfits").val());
-  unerndInc += Number($("#unerndIncNetRental").val());
-  unerndInc += Number($("#unerndIncChildSupAlim").val());
-  unerndInc += Number($("#unerndIncDivIntRoy").val());
-  unerndInc += Number($("#unerndIncEduc").val());
-  unerndInc += Number($("#unerndIncOther").val());
-  $("#unerndIncTotal").val(round(unerndInc, 0));
+  var earnedInc = 0;
+  earnedInc += Number($("#earnedIncWages").val());
+  earnedInc += Number($("#earnedIncTrainAllow").val());
+  earnedInc += Number($("#earnedIncSelfFarm").val());
+  earnedInc += Number($("#earnedIncBrdr").val());
+  earnedInc += Number($("#earnedIncRent").val());
+  $("#earnedIncGross").val(round(earnedInc, 0));
+  netErndInc = 0.8 * earnedInc;
+  $("#earnedIncNet").val(round(netErndInc, 0));
+  var unearnedInc = 0;
+  unearnedInc += Number($("#unearnedIncBenfits").val());
+  unearnedInc += Number($("#unearnedIncNetRental").val());
+  unearnedInc += Number($("#unearnedIncChildSupAlim").val());
+  unearnedInc += Number($("#unearnedIncDivIntRoy").val());
+  unearnedInc += Number($("#unearnedIncEduc").val());
+  unearnedInc += Number($("#unearnedIncOther").val());
+  $("#unearnedIncTotal").val(round(unearnedInc, 0));
   if ($("#yesSenior").prop("checked") == true) {
-    totalInc = netErndInc + unerndInc;
+    totalInc = netErndInc + unearnedInc;
   } else {
-    totalInc = erndInc + unerndInc;
+    totalInc = earnedInc + unearnedInc;
   }
   $("#incomeTotal").val(round(totalInc, 0));
 }
 
 function round(value, decimals) {
   return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
+function fpl(value) {
+  return 12060 + value * 4180;
 }
 
 </script>
@@ -144,7 +146,7 @@ function round(value, decimals) {
   <div id="step1" class="stepDiv" style="display: none;">
     <h2>Household</h2>
     <p>How many people live in your household?
-      <span><input id="numHousehold" type="text" class="lm iw ar" value="1"></span>
+      <span><input id="numHousehold" type="text" class="inp-mrg inp-wth aln-rt" value="1"></span>
     </p>
     <p>Do you live with a <strong>senior</strong> (60 or older) or a <strong>person with disabilities</strong>?
       <span><input type="radio" name="withSenior" id="yesSenior"><label for="yesSenior">Yes</label>
@@ -159,21 +161,21 @@ function round(value, decimals) {
     <p>List all <strong>gross monthly earned income</strong>. Don't list <strong>excluded income</strong>.</p>
       <table style="margin-left: 1em" id="step2Table">
         <tr><td>Wages:</td>
-            <td><input id="erndIncWages" type="text" class="iw ar erndInc" value="0"></td></tr>
+            <td><input id="earnedIncWages" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
         <tr><td>Training allowance:</td>
-            <td><input id="erndIncTrainAllow" type="text" class="iw ar erndInc" value="0"></td></tr>
+            <td><input id="earnedIncTrainAllow" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
         <tr><td>Self-employment or farm income:</td>
-            <td><input id="erndIncSelfFarm" type="text" class="iw ar erndInc" value="0"></td></tr>
+            <td><input id="earnedIncSelfFarm" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
         <tr><td>Net boarder/roomer income (income minus business expenses):</td>
-            <td><input id="erndIncBrdr" type="text" class="iw ar erndInc" value="0"></td></tr>
-        <tr><td class="bb">Rental income (if property managed by self):</td>
-            <td class="bb">
-              <input id="erndIncRent" type="text" class="iw ar erndInc" value="0"></td></tr>
-        <tr><td class="ar" id="erndIncGrossLabel">Gross monthly earned income:</td>
-            <td class="ar">
-              <input id="erndIncGross" type="text" class="iw ar" readonly="true"></td></tr>
-        <tr id="erndIncNetRow"><td>Net monthly earned income (based on 20% <strong>earned income deduction</strong>):</td>
-            <td><input id="erndIncNet" type="text" class="iw ar" readonly="true"></td></tr>
+            <td><input id="earnedIncBrdr" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
+        <tr><td class="bot-brd">Rental income (if property managed by self):</td>
+            <td class="bot-brd">
+              <input id="earnedIncRent" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
+        <tr><td class="aln-rt" id="earnedIncGrossLabel">Gross monthly earned income:</td>
+            <td class="aln-rt">
+              <input id="earnedIncGross" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
+        <tr id="earnedIncNetRow"><td>Net monthly earned income (based on 20% <strong>earned income deduction</strong>):</td>
+            <td><input id="earnedIncNet" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
       </table>
     <p class="nav"><button id="prevStep2">Previous</button><button id="nextStep2">Next</button></p>
   </div>
@@ -183,23 +185,23 @@ function round(value, decimals) {
     <p>List all <strong>monthly unearned income</strong>. Don't list <strong>excluded income</strong>.</p>
       <table style="margin-left: 1em" id="step3Table">
         <tr><td>Public benefits (Reach Up, SSI, SSD, VA, etc.):</td>
-            <td><input id="unerndIncBenfits" type="text" class="iw ar unerndInc" value="0"></td></tr>
+            <td><input id="unearnedIncBenfits" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
         <tr><td>Net rental income (if property managed by 3rd party):</td>
-            <td><input id="unerndIncNetRental" type="text" class="iw ar unerndInc" value="0"></td></tr>
+            <td><input id="unearnedIncNetRental" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
         <tr><td>Child support and/or alimony received:</td>
-            <td><input id="unerndIncChildSupAlim" type="text" class="iw ar unerndInc" value="0"></td></tr>
+            <td><input id="unearnedIncChildSupAlim" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
         <tr><td>Countable dividends, interest, royalties:</td>
-            <td><input id="unerndIncDivIntRoy" type="text" class="iw ar unerndInc" value="0"></td></tr>
+            <td><input id="unearnedIncDivIntRoy" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
         <tr><td>Countable educational income:</td>
-            <td><input id="unerndIncEduc" type="text" class="iw ar unerndInc" value="0"></td></tr>
-        <tr><td class="bb">Other:</td>
-            <td class="bb">
-              <input id="unerndIncOther" type="text" class="iw ar unerndInc" value="0"></td></tr>
-        <tr><td class="ar">Total unearned income:</td>
-            <td class="ar">
-              <input id="unerndIncTotal" type="text" class="iw ar" readonly="true"></td></tr>
-        <tr><td class="ar">Total income:</td>
-            <td><input id="incomeTotal" type="text" class="iw ar" readonly="true"></td></tr>
+            <td><input id="unearnedIncEduc" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+        <tr><td class="bot-brd">Other:</td>
+            <td class="bot-brd">
+              <input id="unearnedIncOther" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+        <tr><td class="aln-rt">Total unearned income:</td>
+            <td class="aln-rt">
+              <input id="unearnedIncTotal" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
+        <tr><td class="aln-rt">Total income:</td>
+            <td><input id="incomeTotal" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
       </table>
     <p class="nav"><button id="prevStep3">Previous</button><button id="nextStep3">Next</button></p>
   </div>
