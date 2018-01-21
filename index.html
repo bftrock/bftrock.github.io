@@ -141,7 +141,7 @@ function round(value, decimals) {
   <a href="https://www.hungerfreevt.org"><img src="hfvt-logo.jpg" width="120px"></a>
   <h1>3SquaresVT Eligibility Calculator</h1>
 
-  <div id="step1" class="stepDiv">
+  <div id="step1" class="stepDiv" style="display: none;">
     <h2>Household</h2>
     <p>How many people live in your household?
       <span><input id="numHousehold" type="text" class="lm iw ar" value="1"></span>
@@ -154,7 +154,7 @@ function round(value, decimals) {
     <p class="nav"><button id="nextStep1">Next</button></p>
   </div>
 
-  <div id="step2" class="stepDiv">
+  <div id="step2" class="stepDiv" style="display: none;">
     <h2>Gross Monthly Earned Income</h2>
     <p>List all <strong>gross monthly earned income</strong>. Don't list <strong>excluded income</strong>.</p>
       <table style="margin-left: 1em" id="step2Table">
@@ -178,7 +178,7 @@ function round(value, decimals) {
     <p class="nav"><button id="prevStep2">Previous</button><button id="nextStep2">Next</button></p>
   </div>
 
-  <div id="step3" class="stepDiv">
+  <div id="step3" class="stepDiv" style="display: none;">
     <h2>Monthly Unearned Income</h2>
     <p>List all <strong>monthly unearned income</strong>. Don't list <strong>excluded income</strong>.</p>
       <table style="margin-left: 1em" id="step3Table">
