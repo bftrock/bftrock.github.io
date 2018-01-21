@@ -34,12 +34,12 @@ body {
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-var hasSenior = false;
-
 $( document ).ready(function() {
   $("#nextStep1").click(function() {
-    if (validateStep1())
+    if (validateStep1()) {
+      loadStep2();
       showStep("step2");
+    }
   });
 
   $("#prevStep2").click(function() {
@@ -64,9 +64,19 @@ $( document ).ready(function() {
   showStep("step1");
 });
 
+function loadStep2()
+{
+  if ($("#yesSenior").prop("checked") == true) {
+    $("#erndIncGrossLabel").text("Gross monthly earned income:");
+    $("#erndIncNetRow").show();
+  } else {
+    $("#erndIncGrossLabel").text("Total monthly earned income:")
+    $("#erndIncNetRow").hide();
+  }
+}
+
 function validateStep1() {
   isValid = true;
-  hasSenior = $("#yesSenior").prop("checked", true);
   numHousehold = $("#numHousehold").val()
   if (isNaN(numHousehold)) {
     alert("You must enter a number.");
@@ -110,7 +120,12 @@ function calcIncome() {
   unerndInc += Number($("#unerndIncEduc").val());
   unerndInc += Number($("#unerndIncOther").val());
   $("#unerndIncTotal").val(round(unerndInc, 0));
-  $("#incomeTotal").val(round(netErndInc + unerndInc, 0));
+  if ($("#yesSenior").prop("checked") == true) {
+    totalInc = netErndInc + unerndInc;
+  } else {
+    totalInc = erndInc + unerndInc;
+  }
+  $("#incomeTotal").val(round(totalInc, 0));
 }
 
 function round(value, decimals) {
@@ -154,10 +169,10 @@ function round(value, decimals) {
         <tr><td class="bb">Rental income (if property managed by self):</td>
             <td class="bb">
               <input id="erndIncRent" type="text" class="iw ar erndInc" value="0"></td></tr>
-        <tr><td class="ar">Gross monthly earned income:</td>
+        <tr><td class="ar" id="erndIncGrossLabel">Gross monthly earned income:</td>
             <td class="ar">
               <input id="erndIncGross" type="text" class="iw ar" readonly="true"></td></tr>
-        <tr><td>Net monthly earned income (based on 20% <strong>earned income deduction</strong>):</td>
+        <tr id="erndIncNetRow"><td>Net monthly earned income (based on 20% <strong>earned income deduction</strong>):</td>
             <td><input id="erndIncNet" type="text" class="iw ar" readonly="true"></td></tr>
       </table>
     <p class="nav"><button id="prevStep2">Previous</button><button id="nextStep2">Next</button></p>
