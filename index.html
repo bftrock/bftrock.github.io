@@ -1,312 +1,110 @@
-<html>
+<!doctype html>
+<html class="no-js" lang="en">
 <head>
-<style>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-body {
-  font-family: "proxima-nova","Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-style: normal;
-  font-size: 16px;
-  letter-spacing: 0px;
-  line-height: 1.6em;
-  color: rgba(26,26,26,.7);
-}
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
 
-#step3a span {
-  font-weight: bold;
-}
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/main.css">
 
-.inp-mrg {
-  margin-left: 1em;
-}
-
-.inp-wth {
-  width: 4em;
-}
-
-.aln-rt {
-  text-align: right;
-}
-
-.bot-brd {
-  border-bottom: 1px solid black;
-}
-
-</style>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script type="text/javascript">
-
-var earnedInc, netEarnedInc, unearnedInc, numHousehold, standDeduc;
-
-$(document).ready(function() {
-  $("#numHousehold").on({
-    "change": function() {
-      try {
-        getPosInteger($(this).val(), false);
-      }
-      catch (err) {
-        alert(err);
-      }
-    }
-  });
-
-  $("#step2Table input.earnedInc, #step3Table input.unearnedInc").on({
-    "change": function () {
-      calcIncome();
-    }
-  });
-
-  $("#step4Table input.deduc").on({
-    "change": function () {
-      $("#adjustedIncome").val(calcAdjustedIncome());
-    }
-  });
-
-  calcIncome();
-  showDiv("step1");
-});
-
-function moveStep1Step2() {
-  try {
-    numHousehold = getPosInteger($("#numHousehold").val(), false);
-    $("#numHousehold").val(numHousehold);
-    $("span.nhh").text(numHousehold);
-    standDeduc = calcStandardDeduction(numHousehold);
-    $("#standDeduc").text(standDeduc);
-    if ($("#yesSenior").prop("checked") == true) {
-      $("#earnedIncGrossLabel").text("Gross monthly earned income:");
-      $("#earnedIncNetRow").show();
-    } else {
-      $("#earnedIncGrossLabel").text("Total monthly earned income:")
-      $("#earnedIncNetRow").hide();
-    }
-    showDiv("step2");
-  }
-  catch (err) {
-    alert(err);
-    $("#numHousehold").focus();
-  }
-}
-
-function moveStep2Step3() {
-  try {
-    if (calcIncome())
-      showDiv("step3");
-  }
-  catch (err) {
-    alert(err);
-    $("#earnedIncWages").focus();
-  }
-}
-
-function moveStep3Step3a() {
-  var tgi = Number($("#incomeTotal").val());
-  var gil = round(calcGrossIncomeLimit(numHousehold), 0);
-  $("#tgi").text(tgi);
-  $("#gil").text(gil);
-  if (tgi > gil) {
-    elig = "you are not eligible for 3SqauresVT"
-    $("#nextStep3a").hide();
-  } else {
-    elig = "you may proceed to the next step"
-    $("#nextStep3a").show();
-  }
-  $("#eligYesNo").text(elig);
-  showDiv("step3a");
-}
-
-function showDiv(stepId) {
-  $(".stepDiv").each(function (index) {
-    if (this.id == stepId) {
-      $(this).show()
-    }
-    else {
-      $(this).hide()
-    }
-  })
-}
-
-function calcIncome() {
-  try {
-    earnedInc = 0;
-    earnedInc += getPosNumber($("#earnedIncWages").val());
-    earnedInc += getPosNumber($("#earnedIncTrainAllow").val());
-    earnedInc += getPosNumber($("#earnedIncSelfFarm").val());
-    earnedInc += getPosNumber($("#earnedIncBrdr").val());
-    earnedInc += getPosNumber($("#earnedIncRent").val());
-    $("#earnedIncGross").val(round(earnedInc, 0));
-    netEarnedInc = 0.8 * earnedInc;
-    $("#earnedIncNet").val(round(netEarnedInc, 0));
-    unearnedInc = 0;
-    unearnedInc += getPosNumber($("#unearnedIncBenfits").val());
-    unearnedInc += getPosNumber($("#unearnedIncNetRental").val());
-    unearnedInc += getPosNumber($("#unearnedIncChildSupAlim").val());
-    unearnedInc += getPosNumber($("#unearnedIncDivIntRoy").val());
-    unearnedInc += getPosNumber($("#unearnedIncEduc").val());
-    unearnedInc += getPosNumber($("#unearnedIncOther").val());
-    $("#unearnedIncTotal").val(round(unearnedInc, 0));
-    if ($("#yesSenior").prop("checked") == true) {
-      totalInc = netEarnedInc + unearnedInc;
-    } else {
-      totalInc = earnedInc + unearnedInc;
-    }
-    $("#incomeTotal").val(round(totalInc, 0));
-    return true;
-  }
-  catch (err) {
-    alert(err);
-    return false;
-  }
-}
-
-function calcAdjustedIncome() {
-  try {
-    incBeforeDed = unearnedInc + netEarnedInc;
-    var deductions = standDeduc;
-    deductions += getPosNumber($("#depCareCosts").val(), true);
-    deductions += getPosNumber($("#childSupport").val(), true);
-    return Math.max(0, incBeforeDed - deductions);
-  }
-  catch (err) {
-    alert(err);
-  }
-}
-
-function getNumber(value) {
-  if (value == "") throw "Value cannot be empty.";
-  if (isNaN(value)) throw "Value must be a number.";
-  return Number(value);
-}
-
-function getPosInteger(value, allowZero = true) {
-  var x = getPosNumber(value, allowZero);
-  return parseInt(x);
-}
-
-function getPosNumber(value, allowZero = true) {
-  var x = getNumber(value);
-  if (allowZero) {
-    if (x < 0) throw "Value cannot be negative.";
-  } else {
-    if (x <= 0) throw "Value cannot be negative or zero.";
-  }
-  return Number(value);
-}
-
-function round(value, decimals) {
-  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
-}
-
-function calcGrossIncomeLimit(numHousehold) {
-  return 1.85 * (12060 + (numHousehold - 1) * 4180) / 12;
-}
-
-function calcStandardDeduction(numHousehold) {
-  var result;
-  if (numHousehold > 0 && numHousehold < 4) {
-    result = 160;
-  } else if (numHousehold == 4) {
-    result = 170;
-  } else if (numHousehold == 5) {
-    result = 199;
-  } else {
-    result = 228;
-  }
-  return result;
-}
-
-</script>
 
 </head>
 
 <body>
+  <!--[if lte IE 9]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-6 offset-md-3 tac mt2 mb2">
+        <a class="block mb1" href="https://www.hungerfreevt.org"><img src="img/hfvt-logo-lrg.jpg" class="img-fluid"></a>
+        <h1>3SquaresVT Eligibility Calculator</h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-6 offset-md-3">
+        <div id="step1" class="stepDiv" style="display: none;">
+          <h2>Household</h2>
+          <p>How many people live in your household?
+            <span><input id="numHousehold" type="text" class="inp-mrg inp-wth aln-rt" value="1"></span>
+          </p>
+          <p>Do you live with a <strong>senior</strong> (60 or older) or a <strong>person with disabilities</strong>?
+            <span><input type="radio" name="withSenior" id="yesSenior"><label for="yesSenior">Yes</label>
+                  <input type="radio" name="withSenior" id="noSenior" checked="checked"><label for="noSenior">No</label>
+            </span>
+          </p>
+          <p class="nav"><button id="nextStep1">Next</button></p>
+        </div>
+
+        <div id="step2" class="stepDiv" style="display: none;">
+          <h2>Gross Monthly Earned Income</h2>
+          <p>List all <strong>gross monthly earned income</strong>. Don't list <strong>excluded income</strong>.</p>
+            <table style="margin-left: 1em" id="step2Table">
+              <tr><td>Wages:</td>
+                  <td><input id="earnedIncWages" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
+              <tr><td>Training allowance:</td>
+                  <td><input id="earnedIncTrainAllow" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
+              <tr><td>Self-employment or farm income:</td>
+                  <td><input id="earnedIncSelfFarm" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
+              <tr><td>Net boarder/roomer income (income minus business expenses):</td>
+                  <td><input id="earnedIncBrdr" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
+              <tr><td class="bot-brd">Rental income (if property managed by self):</td>
+                  <td class="bot-brd">
+                    <input id="earnedIncRent" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
+              <tr><td class="aln-rt" id="earnedIncGrossLabel">Gross monthly earned income:</td>
+                  <td class="aln-rt">
+                    <input id="earnedIncGross" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
+              <tr id="earnedIncNetRow"><td>Net monthly earned income (based on 20% <strong>earned income deduction</strong>):</td>
+                  <td><input id="earnedIncNet" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
+            </table>
+          <p class="nav"><button id="prevStep2">Previous</button><button id="nextStep2">Next</button></p>
+        </div>
+
+        <div id="step3" class="stepDiv" style="display: none;">
+          <h2>Monthly Unearned Income</h2>
+          <p>List all <strong>monthly unearned income</strong>. Don't list <strong>excluded income</strong>.</p>
+            <table style="margin-left: 1em" id="step3Table">
+              <tr><td>Public benefits (Reach Up, SSI, SSD, VA, etc.):</td>
+                  <td><input id="unearnedIncBenfits" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+              <tr><td>Net rental income (if property managed by 3rd party):</td>
+                  <td><input id="unearnedIncNetRental" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+              <tr><td>Child support and/or alimony received:</td>
+                  <td><input id="unearnedIncChildSupAlim" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+              <tr><td>Countable dividends, interest, royalties:</td>
+                  <td><input id="unearnedIncDivIntRoy" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+              <tr><td>Countable educational income:</td>
+                  <td><input id="unearnedIncEduc" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+              <tr><td class="bot-brd">Other:</td>
+                  <td class="bot-brd">
+                    <input id="unearnedIncOther" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+              <tr><td class="aln-rt">Total unearned income:</td>
+                  <td class="aln-rt">
+                    <input id="unearnedIncTotal" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
+              <tr><td class="aln-rt">Total income:</td>
+                  <td><input id="incomeTotal" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
+            </table>
+          <p class="nav"><button id="prevStep3">Previous</button><button id="nextStep3">Next</button></p>
+        </div>
+        
+      </div>
+    </div>
+  </div>
   
-  <a href="https://www.hungerfreevt.org"><img src="hfvt-logo.jpg" width="120px"></a>
-  <h1>3SquaresVT Eligibility Calculator</h1>
 
-  <div id="step1" class="stepDiv" style="display: none;">
-    <h2>Household</h2>
-    <p>How many people live in your household?
-      <span><input id="numHousehold" type="text" class="inp-mrg inp-wth aln-rt" value="1"></span>
-    </p>
-    <p>Do you live with a <strong>senior</strong> (60 or older) or a <strong>person with disabilities</strong>?
-      <span><input type="radio" name="withSenior" id="yesSenior"><label for="yesSenior">Yes</label>
-            <input type="radio" name="withSenior" id="noSenior" checked="checked"><label for="noSenior">No</label>
-      </span>
-    </p>
-    <p><button onclick="moveStep1Step2()">Next</button></p>
-  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
 
-  <div id="step2" class="stepDiv" style="display: none;">
-    <h2>Monthly Earned Income</h2>
-    <p>List all <strong>gross monthly earned income</strong>. Don't list <strong>excluded income</strong>.</p>
-      <table style="margin-left: 1em" id="step2Table">
-        <tr><td>Wages:</td>
-            <td><input id="earnedIncWages" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
-        <tr><td>Training allowance:</td>
-            <td><input id="earnedIncTrainAllow" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
-        <tr><td>Self-employment or farm income:</td>
-            <td><input id="earnedIncSelfFarm" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
-        <tr><td>Net boarder/roomer income (income minus business expenses):</td>
-            <td><input id="earnedIncBrdr" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
-        <tr><td class="bot-brd">Rental income (if property managed by self):</td>
-            <td class="bot-brd">
-              <input id="earnedIncRent" type="text" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
-        <tr><td class="aln-rt" id="earnedIncGrossLabel">Gross monthly earned income:</td>
-            <td class="aln-rt">
-              <input id="earnedIncGross" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
-        <tr id="earnedIncNetRow"><td>Net monthly earned income (based on 20% <strong>earned income deduction</strong>):</td>
-            <td><input id="earnedIncNet" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
-      </table>
-    <p><button onclick="showDiv('step1')">Previous</button><button onclick="moveStep2Step3()">Next</button></p>
-  </div>
-
-  <div id="step3" class="stepDiv" style="display: none;">
-    <h2>Monthly Unearned Income</h2>
-    <p>List all <strong>monthly unearned income</strong>. Don't list <strong>excluded income</strong>.</p>
-      <table style="margin-left: 1em" id="step3Table">
-        <tr><td>Public benefits (Reach Up, SSI, SSD, VA, etc.):</td>
-            <td><input id="unearnedIncBenfits" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
-        <tr><td>Net rental income (if property managed by 3rd party):</td>
-            <td><input id="unearnedIncNetRental" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
-        <tr><td>Child support and/or alimony received:</td>
-            <td><input id="unearnedIncChildSupAlim" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
-        <tr><td>Countable dividends, interest, royalties:</td>
-            <td><input id="unearnedIncDivIntRoy" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
-        <tr><td>Countable educational income:</td>
-            <td><input id="unearnedIncEduc" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
-        <tr><td class="bot-brd">Other:</td>
-            <td class="bot-brd">
-              <input id="unearnedIncOther" type="text" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
-        <tr><td class="aln-rt">Total unearned income:</td>
-            <td class="aln-rt">
-              <input id="unearnedIncTotal" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
-        <tr><td class="aln-rt">Total income:</td>
-            <td><input id="incomeTotal" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
-      </table>
-    <p><button onclick="showDiv('step2')">Previous</button><button onclick="moveStep3Step3a()">Next</button></p>
-  </div>
  
-  <div id="step3a" class="stepDiv" style="display: none;">
-    <p>Based on your household size of <span class="nhh"></span>, your gross monthly income limit is $<span id="gil"></span>.</p>
-    <p>Your total monthly income is $<span id="tgi">0</span>, so <span id="eligYesNo"></span>.</p> 
-    <p><button onclick="showDiv('step3')">Previous</button><button id="nextStep3a" onclick="showDiv('step4')">Next</button></p>
-  </div>
-
-  <div id="step4" class="stepDiv" style="display: none;">
-    <h2>Deductions</h2>
-    <p>Based on your household size of <span class="nhh"></span>,
-       your <strong>standard deduction</strong> is $<span id="standDeduc"></span>.</p>
-    <table style="margin-left: 1em" id="step4Table">
-      <tr><td>List your monthly <strong>dependent care costs</strong>:</td>
-          <td><input id="depCareCosts" type="text" class="inp-wth aln-rt deduc" value="0"></td></tr>
-      <tr><td class="bot-brd">List your <strong>court-ordered child support</strong> payments (amount actually paid):</td>
-          <td class="bot-brd"><input id="childSupport" type="text" class="inp-wth aln-rt deduc" value="0"></td></tr>
-      <tr><td class="aln-rt">Adjusted income:</td>
-          <td><input id="adjustedIncome" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
-    </table>
-    <p><button onclick="showDiv('step3a')">Previous</button><button onclick="moveStep4Step5()">Next</button></p>
-  </div>
-
 </body>
 </html>
