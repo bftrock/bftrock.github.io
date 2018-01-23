@@ -87,6 +87,421 @@ textarea {
 }
 
 /* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+   .pr {
+	position: relative;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0
+}
+
+// hide map and data table under desktop
+.hidden-mobile {
+	@include media-breakpoint-down(sm) {
+		display: none;
+	}
+}
+
+.hidden {
+	display: none !important;
+	visibility: hidden;
+}
+
+.visuallyhidden {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+	clip: auto;
+	height: auto;
+	margin: 0;
+	overflow: visible;
+	position: static;
+	width: auto;
+}
+
+.invisible {
+	visibility: hidden;
+}
+
+.clearfix:before,
+.clearfix:after {
+	content: " ";
+	display: table;
+}
+
+.clearfix:after {
+	clear: both;
+}
+
+.clearfix {
+	*zoom: 1;
+}
+
+.black-bkgr {
+	background-color: $black;
+	color: $white;
+}
+
+.bg-green {
+	background: $green !important;
+	border: 1px solid $green !important;
+	color: $white;
+}
+
+.orange-bkgr {
+	background: $orange;
+	color: $white;
+}
+
+.white-bkgr {
+	background: $white;
+}
+
+.warning-bkgr {
+	background-color: $orange;
+}
+
+
+/* ======================
+spacing and layout 
+========================= */
+
+.float-right {
+	float: right;
+}
+
+.float-left {
+	float: left;
+}
+
+.float-none {
+	float: none;
+}
+
+.container-narrow {
+	max-width: 600px;
+}
+
+.flex-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.space-between {
+	justify-content: space-between;
+}
+
+.block {display: block;}
+
+.table {
+	display: table;
+}
+
+.table-cell {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.horz-spacer {
+	display: inline-block;
+	width: 10px;
+}
+
+.horz-spacer-4x {
+	display: inline-block;
+	width: 40px;
+}
+
+.divider {
+	height: 1px;
+	width: 80%;
+	margin: 30px auto;
+	background-color: gray;
+}
+
+.no-horiz-padding {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+.no-padding {
+	padding: 0 !important;
+}
+
+.pl0 {
+	padding-left: 0;
+}
+
+.pr1 {
+	padding-right: 16px;
+}
+
+.pl1 {
+	padding-left: 16px;
+}
+
+.padding-all {
+	padding: 24px;
+}
+
+.pt0 {
+	padding-top: 0;
+}
+
+.pt1 {
+	padding-top: 16px;
+}
+
+.pt2 {
+	padding-top: 32px;
+}
+
+.pt3 {
+	padding-top: 48px;
+}
+
+.pt4 {
+	padding-top: 64px;
+}
+
+.pb0 {
+	padding-bottom: 0;
+}
+
+.pb1 {
+	padding-bottom: 16px;
+}
+
+.pb2 {
+	padding-bottom: 32px;
+}
+
+.pb3 {
+	padding-bottom: 48px;
+}
+
+.pb4 {
+	padding-bottom: 64px;
+}
+
+.mt0 {
+	margin-top: 0;
+}
+
+.mthalf {
+	margin-top: 8px;
+}
+
+.mt1 {
+	margin-top: 16px;
+}
+
+.mt2 {
+	margin-top: 32px;
+}
+
+.mt3 {
+	margin-top: 48px;
+}
+
+.mt4 {
+	margin-top: 64px;
+}
+
+.mb0 {
+	margin-bottom: 0;
+}
+
+.mb1 {
+	margin-bottom: 16px;
+}
+
+.mb2 {
+	margin-bottom: 32px;
+}
+
+.mb3 {
+	margin-bottom: 48px;
+}
+
+.mb4 {
+	margin-bottom: 64px;
+}
+
+.mr1 {
+	margin-right: 10px
+}
+
+.mlauto {
+	margin-left: auto;
+}
+
+.mrauto {
+	margin-right: auto;
+}
+
+.margin-auto {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+/* ==============================
+type 
+================================= */
+
+p {
+	margin: 0 0 14px;
+	padding: 0;
+}
+
+label {
+	font-size: 14px;
+}
+
+ol,
+ul {
+	margin: 0;
+	padding: 0;
+}
+
+ul.sublist {
+	margin: 16px 0 !important;
+}
+
+ul.disc li,
+ul.sublist li {
+	list-style-type: disc;
+	margin-left: 20px;
+}
+
+li {
+	list-style-type: none;
+	margin-bottom: 12px;
+}
+
+b,
+strong {
+	font-weight: 700;
+}
+
+blockquote,
+cite,
+em,
+i {
+	font-style: italic;
+}
+
+blockquote {
+	margin: 40px;
+}
+
+blockquote::before {
+	content: "\201C";
+	display: block;
+	font-size: 30px;
+	height: 0;
+	left: -20px;
+	position: relative;
+	top: -10px;
+}
+
+.black-text {
+	color: black;
+}
+
+.white-text {
+	color: white;
+}
+
+.gray-text {
+	color: gray;
+}
+
+.green-text {
+	color: green;
+}
+
+.red-text {
+	color: red;
+}
+
+p.error-text,
+div.error-text {
+	padding: 6px 15px;
+	margin: 10px 0;
+	background-color: red;
+	color: white !important;
+	font-size: 14px;
+}
+
+
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.capitalize {
+	text-transform: capitalize;
+}
+
+.small {
+	font-size: 12px;
+}
+
+.tac {
+	text-align: center;
+}
+
+.right-text {
+	text-align: right;
+}
+
+.left-text {
+	text-align: left;
+}
+
+.bold {
+	font-weight: 700;
+}
+
+.xbold {
+	font-weight: 900;
+}
+
+.large {
+	font-size: 18px
+}
+
+.xlarge {
+	font-size: 22px
+}
+
+
+/* ==========================================================================
    Author's custom styles
    ========================================================================== */
 body {
