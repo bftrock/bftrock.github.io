@@ -58,16 +58,6 @@ video {
 }
 
 /*
- * Remove default fieldset styles.
- */
-
-fieldset {
-    border: 0;
-    margin: 0;
-    padding: 0;
-}
-
-/*
  * Allow only vertical resizing of textareas.
  */
 
@@ -90,7 +80,7 @@ textarea {
    Helper classes
    ========================================================================== */
 
-   .pr {
+.pr {
 	position: relative;
 }
 
@@ -378,10 +368,6 @@ p {
 	padding: 0;
 }
 
-label {
-	font-size: 14px;
-}
-
 ol,
 ul {
 	margin: 0;
@@ -513,6 +499,15 @@ body {
   color: rgba(26,26,26,.7);
 }
 
+label {
+	font-size: 16px;
+}
+
+input:read-only { 
+	background-color: rgb(212, 212, 212);
+	padding-right: 15px;
+}
+
 .inp-mrg {
   margin-left: 1em;
 }
@@ -523,6 +518,10 @@ body {
 
 .aln-rt {
   text-align: right;
+}
+
+.aln-ctr {
+	text-align: center;
 }
 
 .bot-brd {
