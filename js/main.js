@@ -1,36 +1,30 @@
 
-$( document ).ready(function() {
-    $("#nextStep1").click(function() {
-      if (validateStep1()) {
-        loadStep2();
-        showStep("step2");
-      }
-    });
-  
-    $("#prevStep2").click(function() {
-      showStep("step1");
-    });
-  
-    $("#nextStep2").click(function() {
-      showStep("step3");
-    });
-  
-    $("#prevStep3").click(function() {
-      showStep("step2");
-    });
-  
-    $("#step2Table input.earnedInc, #step3Table input.unearnedInc").on({
-      "change": function () {
-        calcIncome();
-      }
-    });
-  
-    calcIncome();
-    showStep("step1");
+var earnedInc, netEarnedInc, unearnedInc, numHousehold, standDeduc;
+
+$(document).ready(function() {
+  $("#step2Table input.earnedInc, #step3Table input.unearnedInc").on({
+    "change": function () {
+      calcIncome();
+    }
   });
-  
-  function loadStep2()
-  {
+
+  $("#step4Table input.deduc").on({
+    "change": function () {
+      $("#adjustedIncome").val(calcAdjustedIncome());
+    }
+  });
+
+  calcIncome();
+  showDiv("step1");
+});
+
+function moveStep1Step2() {
+  try {
+    numHousehold = getPosInteger($("#numHousehold").val(), false);
+    $("#numHousehold").val(numHousehold);
+    $("span.nhh").text(numHousehold);
+    standDeduc = calcStandardDeduction(numHousehold);
+    $("#standDeduc").text(standDeduc);
     if ($("#yesSenior").prop("checked") == true) {
       $("#earnedIncGrossLabel").text("Gross monthly earned income:");
       $("#earnedIncNetRow").show();
@@ -38,65 +32,137 @@ $( document ).ready(function() {
       $("#earnedIncGrossLabel").text("Total monthly earned income:")
       $("#earnedIncNetRow").hide();
     }
+    showDiv("step2");
   }
-  
-  function validateStep1() {
-    isValid = true;
-    numHousehold = $("#numHousehold").val()
-    if (isNaN(numHousehold)) {
-      alert("You must enter a number.");
-      isValid = false;
+  catch (err) {
+    alert(err);
+    $("#numHousehold").focus();
+  }
+}
+
+function moveStep2Step3() {
+  try {
+    if (calcIncome())
+      showDiv("step3");
+  }
+  catch (err) {
+    alert(err);
+    $("#earnedIncWages").focus();
+  }
+}
+
+function moveStep3Step3a() {
+  var tgi = Number($("#incomeTotal").val());
+  var gil = round(calcGrossIncomeLimit(numHousehold), 0);
+  $("#tgi").text(tgi);
+  $("#gil").text(gil);
+  if (tgi > gil) {
+    elig = "you are not eligible for 3SqauresVT"
+    $("#nextStep3a").hide();
+  } else {
+    elig = "you may proceed to the next step"
+    $("#nextStep3a").show();
+  }
+  $("#eligYesNo").text(elig);
+  showDiv("step3a");
+}
+
+function showDiv(stepId) {
+  $(".stepDiv").each(function (index) {
+    if (this.id == stepId) {
+      $(this).show()
     }
     else {
-      if (numHousehold < 1) {
-        alert("You must enter a number greater than or equal to 1.");
-        isValid = false;
-      }
+      $(this).hide()
     }
-    return isValid;
-  }
-  
-  function showStep(stepId) {
-    $(".stepDiv").each(function (index) {
-      if (this.id == stepId) {
-        $(this).show()
-      }
-      else {
-        $(this).hide()
-      }
-    })
-  }
-  
-  function calcIncome() {
-    var earnedInc = 0;
-    earnedInc += Number($("#earnedIncWages").val());
-    earnedInc += Number($("#earnedIncTrainAllow").val());
-    earnedInc += Number($("#earnedIncSelfFarm").val());
-    earnedInc += Number($("#earnedIncBrdr").val());
-    earnedInc += Number($("#earnedIncRent").val());
+  })
+}
+
+function calcIncome() {
+  try {
+    earnedInc = 0;
+    earnedInc += getPosNumber($("#earnedIncWages").val());
+    earnedInc += getPosNumber($("#earnedIncTrainAllow").val());
+    earnedInc += getPosNumber($("#earnedIncSelfFarm").val());
+    earnedInc += getPosNumber($("#earnedIncBrdr").val());
+    earnedInc += getPosNumber($("#earnedIncRent").val());
     $("#earnedIncGross").val(round(earnedInc, 0));
-    netErndInc = 0.8 * earnedInc;
-    $("#earnedIncNet").val(round(netErndInc, 0));
-    var unearnedInc = 0;
-    unearnedInc += Number($("#unearnedIncBenfits").val());
-    unearnedInc += Number($("#unearnedIncNetRental").val());
-    unearnedInc += Number($("#unearnedIncChildSupAlim").val());
-    unearnedInc += Number($("#unearnedIncDivIntRoy").val());
-    unearnedInc += Number($("#unearnedIncEduc").val());
-    unearnedInc += Number($("#unearnedIncOther").val());
+    netEarnedInc = 0.8 * earnedInc;
+    $("#earnedIncNet").val(round(netEarnedInc, 0));
+    unearnedInc = 0;
+    unearnedInc += getPosNumber($("#unearnedIncBenfits").val());
+    unearnedInc += getPosNumber($("#unearnedIncNetRental").val());
+    unearnedInc += getPosNumber($("#unearnedIncChildSupAlim").val());
+    unearnedInc += getPosNumber($("#unearnedIncDivIntRoy").val());
+    unearnedInc += getPosNumber($("#unearnedIncEduc").val());
+    unearnedInc += getPosNumber($("#unearnedIncOther").val());
     $("#unearnedIncTotal").val(round(unearnedInc, 0));
     if ($("#yesSenior").prop("checked") == true) {
-      totalInc = netErndInc + unearnedInc;
+      totalInc = netEarnedInc + unearnedInc;
     } else {
       totalInc = earnedInc + unearnedInc;
     }
     $("#incomeTotal").val(round(totalInc, 0));
+    return true;
   }
-  
-  function round(value, decimals) {
-    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+  catch (err) {
+    alert(err);
+    return false;
   }
-  
-  function fpl(value) {
-    return 12060 + value * 4180;
+}
+
+function calcAdjustedIncome() {
+  try {
+    incBeforeDed = unearnedInc + netEarnedInc;
+    var deductions = standDeduc;
+    deductions += getPosNumber($("#depCareCosts").val(), true);
+    deductions += getPosNumber($("#childSupport").val(), true);
+    return Math.max(0, incBeforeDed - deductions);
   }
+  catch (err) {
+    alert(err);
+  }
+}
+
+function getNumber(value) {
+  if (value == "") throw "Value cannot be empty.";
+  if (isNaN(value)) throw "Value must be a number.";
+  return Number(value);
+}
+
+function getPosInteger(value, allowZero = true) {
+  var x = getPosNumber(value, allowZero);
+  return parseInt(x);
+}
+
+function getPosNumber(value, allowZero = true) {
+  var x = getNumber(value);
+  if (allowZero) {
+    if (x < 0) throw "Value cannot be negative.";
+  } else {
+    if (x <= 0) throw "Value cannot be negative or zero.";
+  }
+  return Number(value);
+}
+
+function round(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
+function calcGrossIncomeLimit(numHousehold) {
+  return 1.85 * (12060 + (numHousehold - 1) * 4180) / 12;
+}
+
+function calcStandardDeduction(numHousehold) {
+  var result;
+  if (numHousehold > 0 && numHousehold < 4) {
+    result = 160;
+  } else if (numHousehold == 4) {
+    result = 170;
+  } else if (numHousehold == 5) {
+    result = 199;
+  } else {
+    result = 228;
+  }
+  return result;
+}
