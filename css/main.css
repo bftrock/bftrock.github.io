@@ -528,6 +528,13 @@ input:read-only {
   border-bottom: 1px solid black;
 }
 
+.calc-res {
+	float: left;
+	width: 4em;
+	padding-right: 16px;
+	background-color: rgb(212, 212, 212);
+	color: black;
+}
 
 
 

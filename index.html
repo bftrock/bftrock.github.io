@@ -35,7 +35,7 @@
       <div class="col-12 col-md-6 offset-md-3">
         
         <div id="step1" class="stepDiv" style="display: none;">
-          <h2>Household</h2>
+          <h3>Step 1: Household</h3>
           <table id="step1Table">
             <tr>
               <td>How many people live in your household?</td>
@@ -44,16 +44,16 @@
             <tr>
               <td>Do you live with a <strong>senior</strong> (60 or older) or a <strong>person with disabilities</strong>?</td>
               <td>
-                <input type="radio" name="withSenior" id="yesSenior"><label for="yesSenior">Yes</label>
+                <input type="radio" name="withSenior" id="yesSenior"><label for="yesSenior">Yes</label><br> 
                 <input type="radio" name="withSenior" id="noSenior" checked="checked"><label for="noSenior">No</label>
               </td>
             </tr>
           </table>
-          <p class="aln-ctr pt1"><button onclick="moveStep1Step2()">Next</button></p>
+          <p class="aln-ctr pt1"><button onclick="moveStep2()">Next</button></p>
         </div>
       
         <div id="step2" class="stepDiv" style="display: none;">
-          <h2>Monthly Earned Income</h2>
+          <h3>Step 2: Monthly Earned Income</h3>
           <p>List all <strong>gross monthly earned income</strong>. Don't list <strong>excluded income</strong>.</p>
             <table id="step2Table">
               <tr><td>Wages:</td>
@@ -65,68 +65,74 @@
               <tr><td>Net boarder/roomer income (income minus business expenses):</td>
                   <td><input id="earnedIncBrdr" type="number" minimum="0" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
               <tr><td class="bot-brd">Rental income (if property managed by self):</td>
-                  <td class="bot-brd">
-                    <input id="earnedIncRent" type="number" minimum="0" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
-              <tr><td class="aln-rt" id="earnedIncGrossLabel">Gross monthly earned income:</td>
-                  <td class="aln-rt">
-                    <input id="earnedIncGross" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
-              <tr id="earnedIncNetRow"><td>Net monthly earned income (based on 20% <strong>earned income deduction</strong>):</td>
-                  <td><input id="earnedIncNet" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
+                  <td class="bot-brd"><input id="earnedIncRent" type="number" minimum="0" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
+              <tr><td class="aln-rt" id="grossEarnedIncLabel">Gross monthly earned income:</td>
+                  <td><span id="grossEarnedInc" class="aln-rt calc-res">0</span></td></tr>
+              <tr id="netEarnedIncRow"><td class="aln-rt">Net monthly earned income*:</td>
+                  <td><span id="netEarnedInc" class="aln-rt calc-res">0</span></td></tr>
             </table>
-          <p class="aln-ctr pt1"><button onclick="showDiv('step1')">Previous</button><button onclick="moveStep2Step3()">Next</button></p>
+          <p class="aln-ctr pt1"><button onclick="moveStep1()">Previous</button><button onclick="moveStep3()">Next</button></p>
+          <p class="small" id="step2FootNote">* Based on 20% <strong>earned income deduction</strong>.</p>
         </div>
       
         <div id="step3" class="stepDiv" style="display: none;">
-          <h2>Monthly Unearned Income</h2>
+          <h3>Step 3: Monthly Unearned Income</h3>
           <p>List all <strong>monthly unearned income</strong>. Don't list <strong>excluded income</strong>.</p>
             <table id="step3Table">
               <tr><td>Public benefits (Reach Up, SSI, SSD, VA, etc.):</td>
-                  <td><input id="unearnedIncBenfits" type="number" minimum="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+                  <td><input type="number" minimum="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
               <tr><td>Net rental income (if property managed by 3rd party):</td>
-                  <td><input id="unearnedIncNetRental" type="number" minimum="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+                  <td><input type="number" minimum="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
               <tr><td>Child support and/or alimony received:</td>
-                  <td><input id="unearnedIncChildSupAlim" type="number" minimum="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+                  <td><input type="number" minimum="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
               <tr><td>Countable dividends, interest, royalties:</td>
-                  <td><input id="unearnedIncDivIntRoy" type="number" minimum="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+                  <td><input type="number" minimum="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
               <tr><td>Countable educational income:</td>
-                  <td><input id="unearnedIncEduc" type="number" minimum="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+                  <td><input type="number" minimum="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
               <tr><td class="bot-brd">Other:</td>
                   <td class="bot-brd">
-                    <input id="unearnedIncOther" type="number" minimum="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
+                    <input type="number" minimum="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
               <tr><td class="aln-rt">Total unearned income:</td>
-                  <td class="aln-rt">
-                    <input id="unearnedIncTotal" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
+                  <td><span id="unearnedIncTotal" class="aln-rt calc-res">0</span></td></tr>
               <tr><td class="aln-rt">Total income:</td>
-                  <td><input id="incomeTotal" type="text" class="inp-wth aln-rt" readonly="true"></td></tr>
+                  <td><span id="incomeTotal" class="aln-rt calc-res">0</span></td></tr>
             </table>
-          <p class="aln-ctr pt1"><button onclick="showDiv('step2')">Previous</button><button onclick="moveStep3Step3a()">Next</button></p>
+          <p class="aln-ctr pt1"><button onclick="moveStep2()">Previous</button><button onclick="moveStep4()">Next</button></p>
         </div>
        
-        <div id="step3a" class="stepDiv" style="display: none;">
-          <p>Based on your household size of <span class="nhh bold"></span>, your gross monthly income limit is $<span id="gil" class="bold"></span>.</p>
-          <p>Your total monthly income is $<span id="tgi" class="bold">0</span>, so <span id="eligYesNo"></span>.</p> 
-          <p class="aln-ctr pt1"><button onclick="showDiv('step3')">Previous</button><button id="nextStep3a" onclick="showDiv('step4')">Next</button></p>
+        <div id="step4" class="stepDiv" style="display: none;">
+          <h3>Step 4: Total Gross Income Test</h3>
+          <table>
+            <tr><td>Your household size of <span class="nhh bold"></span> has a gross monthly income limit of:</td>
+                <td><span id="gil" class="aln-rt calc-res">0</span></td></tr>
+            <tr><td>Your total monthly income is:</td>
+                <td><span id="tgi" class="aln-rt calc-res">0</span></td></tr>
+          </table>
+          <p class="mt1">Your household is <span id="aboveBelow" class="bold"></span> the limit, so <span id="proceedYesNo"></span>.</p> 
+          <p class="aln-ctr pt1"><button onclick="moveStep3()">Previous</button><button id="nextstep4" onclick="moveStep5()">Next</button></p>
         </div>
       
-        <div id="step4" class="stepDiv" style="display: none;">
-          <h2>Deductions</h2>
-          <p>Based on your household size of <span class="nhh"></span>,
-             your <strong>standard deduction</strong> is $<span id="standDeduc"></span>.</p>
-          <table id="step4Table">
+        <div id="step5" class="stepDiv" style="display: none;">
+          <h3>Step 5: Deductions</h3>
+          <table id="step5Table">
+            <tr><td>Your household size of <span class="nhh"></span> has a <strong>standard deduction</strong> of:</td>
+                <td><span id="standDeduc" class="aln-rt calc-res">0</span></td></tr>
             <tr><td>List your monthly <strong>dependent care costs</strong>:</td>
                 <td><input id="depCareCosts" type="number" minimum="0" class="inp-wth aln-rt deduc" value="0"></td></tr>
-            <tr><td class="bot-brd">List your <strong>court-ordered child support</strong> payments (amount actually paid):</td>
+            <tr><td class="bot-brd">List your <strong>court-ordered child support</strong> payments:</td>
                 <td class="bot-brd"><input id="childSupport" type="number" minimum="0" class="inp-wth aln-rt deduc" value="0"></td></tr>
+            <tr><td class="aln-rt">Total deductions:</td>
+                <td><span id="totalDeduc" class="aln-rt calc-res">0</span></td></tr>
             <tr><td class="aln-rt">Adjusted income:</td>
-                <td><input id="adjustedIncome" type="text" class="inp-wth aln-rt" readonly="true" value="0"></td></tr>
+                <td><span id="adjustedIncome" class="aln-rt calc-res">0</span></td></tr>
           </table>
-          <p class="aln-ctr pt1"><button onclick="showDiv('step3a')">Previous</button><button onclick="showDiv('step5')">Next</button></p>
+          <p class="aln-ctr pt1"><button onclick="moveStep6()">Previous</button><button onclick="moveStep4()">Next</button></p>
         </div>
 
-        <div id="step5" class="stepDiv" style="display: none;">
-          <h2>Shelter Costs</h2>
+        <div id="step6" class="stepDiv" style="display: none;">
+          <h3>Step 6: Shelter Costs</h3>
           <p>Enter your monthly <strong>shelter costs</strong>. Divide any annual costs by 12 to get monthly costs.</p>
-          <table id="step5Table">
+          <table id="step6Table">
             <tr><td>Rent:</td>
                 <td><input id="rent" type="number" minimum="0" class="inp-wth aln-rt" value="0"></td></tr>
             <tr><td>Mortgage:</td>
@@ -136,8 +142,10 @@
             <tr><td>Insurance (structure only):</td>
                 <td><input id="insurance" type="number" minimum="0" class="inp-wth aln-rt" value="0"></td></tr>
             <tr><td>
+            <tr><td>Choose the <strong>standard utility allowance</strong> that applies:</td></tr>
+                <td><span id="stdUtilAllow" class="aln-rt calc-res">808</span></td></tr>
+            <tr><td>
                   <table>
-                    <tr><td colspan="2">Choose the <strong>standard utility allowance</strong> that applies:</td></tr>
                     <tr><td><input name="utilAllow" id="allUtils" type="radio" checked="checked" value="808"></td>
                         <td><label for="allUtils">Household pays all utilities, receives fuel assistance, or heat is included but pays additional for air conditioning</label></td></tr>
                     <tr><td><input name="utilAllow" id="heatIncluded" type="radio" value="232"></td>
@@ -148,9 +156,9 @@
                 </td>
                 <td></td></tr>
             <tr><td class="aln-rt">Total shelter costs:</td>
-                <td><input id="totSheltCosts" type="text" class="inp-wth aln-rt" readonly="true" value="0"></td></tr>
+                <td><span id="totSheltCosts" class="aln-rt calc-res">0</span></td></tr>
           </table>
-          <p class="aln-ctr pt1"><button onclick="showDiv('step4')">Previous</button><button onclick="moveStep4Step5()">Next</button></p>
+          <p class="aln-ctr pt1"><button onclick="moveStep5()">Previous</button><button onclick="moveStep7()">Next</button></p>
         </div>
 
       </div>
