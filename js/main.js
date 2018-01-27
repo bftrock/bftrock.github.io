@@ -1,27 +1,45 @@
 
-var numHousehold, hasSenior;
-var earnedInc, netEarnedInc, unearnedInc, incBeforeDed;
-var standDeduc, totalDeduc, adjustIncome;
-
 $(document).ready(function() {
+  $("#numHousehold").on({
+    "change": function() {
+      try {
+        getPosInteger($(this).val(), false);
+      }
+      catch (err) {
+        alert(err);
+      }
+    }
+  });
+
   $("#step2Table input.earnedInc, #step3Table input.unearnedInc").on({
     "change": function () {
       calcIncome();
     }
   });
 
-  $("#step5Table input.deduc").on({
+  $("#step5Table input").on({
     "change": function () {
-      $("#adjustedIncome").val(calcAdjustedIncome());
+      calcAdjustedIncome();
     }
   });
 
+  $("#step6Table input.shelt").on({
+    "change": function() {
+      calcTotalShelterCosts();
+    }
+  });
+
+  $("#utilAllowTable input").change(function () {
+    $("#stdUtilAllow").text(this.value);
+    calcTotalShelterCosts();
+  })
+
+  $("#numHousehold").val(1);
+  $("#noSenior").prop("checked", true);
   moveStep1();
 });
 
 function moveStep1() {
-  $("#numHousehold").val(1);
-  $("#noSenior").prop("checked", true);
   showDiv("step1");
 }
 
@@ -30,7 +48,6 @@ function validateStep1() {
   try {
     numHousehold = getPosInteger($("#numHousehold").val(), false);
     $("#numHousehold").val(numHousehold);
-    hasSenior = $("#yesSenior").prop("checked")
     result = true;
   }
   catch (err)
@@ -42,7 +59,7 @@ function validateStep1() {
 
 function moveStep2() {
   if (validateStep1()) {
-    if (hasSenior == true) {
+    if ($("#yesSenior").prop("checked")) {
       $("#grossEarnedIncLabel").text("Gross monthly earned income:");
       $("#netEarnedIncRow").show();
       $("#step2FootNote").show();
@@ -79,9 +96,9 @@ function validateStep3() {
 
 function moveStep4() {
   if (validateStep3()) {
-    $("#step4 span.nhh").text(numHousehold);
-    var tgi = round(totalInc, 0);
-    var gil = round(calcGrossIncomeLimit(numHousehold), 0);
+    $("#step4 span.nhh").text($("#numHousehold").val());
+    var tgi = Number($("#totalIncome").text());
+    var gil = calcGrossIncomeLimit();
     $("#tgi").text(tgi);
     $("#gil").text(gil);
     if (tgi > gil) {
@@ -98,13 +115,43 @@ function moveStep4() {
 }
 
 function moveStep5() {
-  standDeduc = calcStandardDeduction(numHousehold);
-  totalDeduc = calcTotalDeduction();
-  adjustIncome = calcAdjustedIncome();
-  $("#standDeduc").text(standDeduc);
-  $("#totalDeduc").text(totalDeduc);
-  $("#adjustIncome").text(adjustIncome);
+  $("#step5 span.nhh").text($("#numHousehold").val());
+  if ($("#yesSenior").prop("checked")) {
+    $("#medExpRow").show();
+    $("#medDedRow").show();
+  } else {
+    $("#medExpRow").hide();
+    $("#medDedRow").hide();
+  }
+  calcAdjustedIncome();
   showDiv("step5");
+}
+
+function validateStep5() {
+  var result = false;
+  if (calcAdjustedIncome()) {
+    result = true;
+  }
+  return result;
+}
+
+function moveStep6() {
+  if (validateStep5()) {
+    calcTotalShelterCosts();
+    showDiv("step6");
+  }
+}
+
+function validateStep6() {
+  var result = false;
+  if (calcTotalShelterCosts()) {
+    result = true;
+  }
+  return result;
+}
+
+function moveStep7() {
+  if (validateStep6()) showDiv("step7");
 }
 
 function showDiv(stepId) {
@@ -121,26 +168,28 @@ function showDiv(stepId) {
 function calcIncome() {
   var offendingInput;
   try {
-    earnedInc = 0;
+    var earnedInc = 0;
+    var offendingInput;
     $("#step2Table input.earnedInc").each(function() {
       offendingInput = $(this);
       earnedInc += getPosNumber($(this).val());
     });
     $("#grossEarnedInc").text(round(earnedInc, 0));
-    netEarnedInc = 0.8 * earnedInc;
+    var netEarnedInc = 0.8 * earnedInc;
     $("#netEarnedInc").text(round(netEarnedInc, 0));
-    unearnedInc = 0;
+    var unearnedInc = 0;
     $("#step3Table input.unearnedInc").each(function() {
       offendingInput = $(this);
       unearnedInc += getPosNumber($(this).val());
     });
     $("#unearnedIncTotal").text(round(unearnedInc, 0));
+    var hasSenior = $("#yesSenior").prop("checked");
     if (hasSenior == true) {
       totalInc = netEarnedInc + unearnedInc;
     } else {
       totalInc = earnedInc + unearnedInc;
     }
-    $("#incomeTotal").text(round(totalInc, 0));
+    $("#totalIncome").text(round(totalInc, 0));
     return true;
   }
   catch (err) {
@@ -151,45 +200,121 @@ function calcIncome() {
 }
 
 function calcAdjustedIncome() {
+  var result = false;
   try {
-    incBeforeDed = unearnedInc + netEarnedInc;
-    var deductions = standDeduc;
-    $("step5Table input.deduc").each(function() {
-      deductions += getPosNumber($(this).val(), true);
+    var netEarnedInc = Number($("#netEarnedInc").text());
+    var unearnedInc = Number($("#unearnedInc").text());
+    var incBeforeDed = unearnedInc + netEarnedInc;
+    var standardDeduc = calcStandardDeduction();
+    var totalDeduc = standardDeduc;
+    var offendingInput;
+    $("#step5Table input.deduc").each(function() {
+      offendingInput = $(this);
+      totalDeduc += getPosNumber($(this).val(), true);
     });
-    return Math.max(0, incBeforeDed - deductions);
+    medicalDeduc = calcMedicalDeduction();
+    totalDeduc += medicalDeduc;
+    adjustedIncome =  round(Math.max(0, incBeforeDed - totalDeduc), 0);
+    $("#standardDeduc").text(round(standardDeduc, 0));
+    $("#medicalDeduc").text(round(medicalDeduc, 0));
+    $("#totalDeduc").text(round(totalDeduc, 0));
+    $("#adjustedIncome").text(round(adjustedIncome, 0));
+    result = true;
   }
   catch (err) {
     alert(err);
-  }
-}
-
-function calcGrossIncomeLimit(numHousehold) {
-  return 1.85 * (12060 + (numHousehold - 1) * 4180) / 12;
-}
-
-function calcStandardDeduction(numHousehold) {
-  var result;
-  if (numHousehold > 0 && numHousehold < 4) {
-    result = 160;
-  } else if (numHousehold == 4) {
-    result = 170;
-  } else if (numHousehold == 5) {
-    result = 199;
-  } else {
-    result = 228;
+    offendingInput.focus();
   }
   return result;
 }
 
-function calcTotalDeduction() {
-  var result = standDeduc;
+function calcGrossIncomeLimit() {
+  var numHousehold = Number($("#numHousehold").val());
+  var limitArr = [1812, 2457, 3097, 3739, 4381, 5021, 5663, 6305, 6947, 7589];
+  var grossIncLim = 0;
+  if (numHousehold < 11) {
+    grossIncLim = limitArr[numHousehold - 1];
+  }
+  else {
+    grossIncLim = limitArr[limitArr.length - 1] + (numHousehold - 10) * 642;
+  }
+  return grossIncLim;
+}
+
+function calcStandardDeduction() {
+  var result;
+  var numHousehold = Number($("#numHousehold").val());
+  if (numHousehold > 0 && numHousehold < 4) {
+    result = 155;
+  } else if (numHousehold == 4) {
+    result = 168;
+  } else if (numHousehold == 5) {
+    result = 197;
+  } else {
+    result = 226;
+  }
+  return result;
+}
+
+function calcMedicalDeduction() {
+  medicalExpenses = Number($("#medicalExpenses").val());
+  medicalDeduc = 0;
+  if (medicalExpenses >= 35 && medicalExpenses <= 173) {
+    medicalDeduc = 138;
+  } else if (medicalExpenses > 173) {
+    medicalDeduc = medicalExpenses - 35;
+  }
+  return medicalDeduc;
+}
+
+function calcTotalShelterCosts() {
+  var result = false;
+  var offendingInput;
   try {
-    
+    var shelterCosts = 0;
+    $("#step6Table input.shelt").each(function(i) {
+      offendingInput = $(this);
+      shelterCosts += getPosNumber($(this).val(), true); 
+    });
+    shelterCosts += Number($("#stdUtilAllow").text());
+    $("#totSheltCosts").text(round(shelterCosts, 0));
+    var adjustedIncome = Number($("#adjustedIncome").text());
+    var excessShelterCost = shelterCosts - adjustedIncome / 2;
+    shelterDeduc = Math.max(0, excessShelterCost);
+    if ($("#yesSenior").prop("checked") == false) {
+      shelterDeduc = Math.min(shelterDeduc, 504);
+    }
+    $("#shelterDeduc").text(shelterDeduc);
+    var monthlyNetInc = adjustedIncome - shelterDeduc;
+    $("#monthlyNetInc").text(monthlyNetInc);
+    $("#benefitAllot").text(calcBenefitAllotment(monthlyNetInc));
+    result = true;
   }
   catch (err) {
-
+    alert(err);
+    offendingInput.focus();
   }
+  return result;
+}
+
+function calcBenefitAllotment(monthlyNetInc) {
+  var maxBenefitArr = [194, 357, 511, 649, 771, 925, 1022, 1169, 1315, 1461];
+  var numHousehold = Number($("#numHousehold").val());
+  var maxBenefit = 0;
+  var benefit = 0;
+  if (numHousehold > 10) {
+    maxBenefit = maxBenefitArr[maxBenefitArr.length - 1] + (numHousehold - 10) * 146;
+  }
+  else {
+    maxBenefit = maxBenefitArr[numHousehold - 1];
+  }
+  if (monthlyNetInc <= 0) {
+    benefit = maxBenefit;
+  }
+  else {
+    benefit = maxBenefit - Math.ceil(0.3 * monthlyNetInc);
+  }
+  return benefit;
 }
 
 function getNumber(value) {
