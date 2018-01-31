@@ -25,8 +25,8 @@
   <div class="container">
     <div class="row">
       <div class="col-12 col-md-6 offset-md-3 tac mt1 mb1">
-        <a class="block mb1" href="https://www.hungerfreevt.org"><img src="img/hfvt-logo-lrg.jpg" class="img-fluid"></a>
-        <h1>3SquaresVT Eligibility Calculator</h1>
+        <a class="block mb1" href="https://www.hungerfreevt.org"><img src="img/hfvt-logo-lrg.jpg" class="main-logo img-fluid"></a>
+        <h1 class="page-title">3SquaresVT Eligibility Calculator</h1>
       </div>
     </div>
 
@@ -35,7 +35,7 @@
         
         <div id="step1" class="stepDiv" style="display: none;">
           <h3>Step 1: Household</h3>
-          <table id="step1Table">
+          <table id="step1Table" class="serif">
             <tr>
               <td>How many people live in your household?</td>
               <td><input id="numHousehold" type="number" min="1" value="1" class="inp-wth aln-rt"></td>
@@ -53,8 +53,8 @@
       
         <div id="step2" class="stepDiv" style="display: none;">
           <h3>Step 2: Monthly Earned Income</h3>
-          <p>List all gross monthly earned income. Don't list excluded income.</p>
-            <table id="step2Table">
+          <p class="serif">List all gross monthly earned income. Don't list excluded income.</p>
+            <table id="step2Table" class="serif">
               <tr><td>Wages:</td>
                   <td><input id="earnedIncWages" type="number" min="0" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
               <tr><td>Training allowance:</td>
@@ -65,10 +65,10 @@
                   <td><input id="earnedIncBrdr" type="number" min="0" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
               <tr><td class="bot-brd">Rental income (if property managed by self):</td>
                   <td class="bot-brd"><input id="earnedIncRent" type="number" min="0" class="inp-wth aln-rt earnedInc" value="0"></td></tr>
-              <tr><td class="aln-rt" id="grossEarnedIncLabel">Gross monthly earned income:</td>
+              <tr class="summation-row"><td class="aln-rt" id="grossEarnedIncLabel">Gross monthly earned income:</td>
                   <td><span id="grossEarnedInc" class="aln-rt calc-res">0</span></td></tr>
-              <tr id="netEarnedIncRow"><td class="aln-rt">Net monthly earned income*:</td>
-                  <td><span id="netEarnedInc" class="aln-rt calc-res">0</span></td></tr>
+              <tr class="summation-row" id="netEarnedIncRow"><td class="aln-rt">Net monthly earned income*:</td>
+                  <td class="summation-row"><span id="netEarnedInc" class="aln-rt calc-res">0</span></td></tr>
             </table>
           <p class="aln-ctr pt1">
             <button class="mr1" onclick="moveStep1()">Previous</button>
@@ -78,8 +78,8 @@
       
         <div id="step3" class="stepDiv" style="display: none;">
           <h3>Step 3: Monthly Unearned Income</h3>
-          <p>List all monthly unearned income. Don't list excluded income.</p>
-            <table id="step3Table">
+          <p class="serif">List all monthly unearned income. Don't list excluded income.</p>
+            <table id="step3Table" class="serif">
               <tr><td>Public benefits (Reach Up, SSI, SSD, VA, etc.):</td>
                   <td><input type="number" min="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
               <tr><td>Net rental income (if property managed by 3rd party):</td>
@@ -93,9 +93,9 @@
               <tr><td class="bot-brd">Other:</td>
                   <td class="bot-brd">
                     <input type="number" min="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
-              <tr><td class="aln-rt">Total unearned income:</td>
+              <tr class="summation-row"><td class="aln-rt ">Total unearned income:</td>
                   <td><span id="unearnedIncTotal" class="aln-rt calc-res">0</span></td></tr>
-              <tr><td class="aln-rt">Total income:</td>
+              <tr class="summation-row"><td class="aln-rt">Total income:</td>
                   <td><span id="totalIncome" class="aln-rt calc-res">0</span></td></tr>
             </table>
           <p class="aln-ctr pt1">
@@ -105,13 +105,13 @@
        
         <div id="step4" class="stepDiv" style="display: none;">
           <h3>Step 4: Total Gross Income Test</h3>
-          <table>
+          <table class="serif">
             <tr><td>Your household size of <span class="nhh"></span> has a gross monthly income limit of:</td>
                 <td><span id="gil" class="aln-rt calc-res">0</span></td></tr>
             <tr><td>Your total monthly income is:</td>
                 <td><span id="tgi" class="aln-rt calc-res">0</span></td></tr>
           </table>
-          <p class="mt1">Your household is <span id="aboveBelow" class="bold"></span> the limit, so <span id="proceedYesNo"></span>.</p> 
+          <p class="mt1 serif">Your household is <span id="aboveBelow" class="bold"></span> the limit, so <span id="proceedYesNo"></span>.</p> 
           <p class="aln-ctr pt1">
             <button class="mr1" onclick="moveStep3()">Previous</button>
             <button class="ml1" id="nextstep4" onclick="moveStep5()">Next</button></p>
@@ -119,20 +119,20 @@
       
         <div id="step5" class="stepDiv" style="display: none;">
           <h3>Step 5: Deductions</h3>
-          <table id="step5Table">
+          <table id="step5Table" class="serif">
             <tr id="medExpRow"><td>List your monthly medical expenses:</td>
               <td><input id="medicalExpenses" type="number" min="0" class="inp-wth aln-rt" value="0"></td></tr>
             <tr><td>List your monthly dependent care costs:</td>
                 <td><input id="depCareCosts" type="number" min="0" class="inp-wth aln-rt deduc" value="0"></td></tr>
             <tr><td class="bot-brd">List your court-ordered child support payments:</td>
                 <td class="bot-brd"><input id="childSupport" type="number" min="0" class="inp-wth aln-rt deduc" value="0"></td></tr>
-            <tr><td class="aln-rt">Standard deduction for household size of <span class="nhh"></span>:</td>
+            <tr class="summation-row"><td class="aln-rt">Standard deduction for household size of <span class="nhh"></span>:</td>
                 <td><span id="standardDeduc" class="aln-rt calc-res">0</span></td></tr>
-            <tr id="medDedRow"><td class="aln-rt">Medical deduction:</td>
+            <tr class="summation-row" id="medDedRow"><td class="aln-rt">Medical deduction:</td>
                 <td><span id="medicalDeduc" class="aln-rt calc-res">0</span></td></tr>
-            <tr><td class="aln-rt">Total deductions:</td>
+            <tr class="summation-row"><td class="aln-rt">Total deductions:</td>
                 <td><span id="totalDeduc" class="aln-rt calc-res">0</span></td></tr>
-            <tr><td class="aln-rt">Adjusted income:</td>
+            <tr class="summation-row"><td class="aln-rt">Adjusted income:</td>
                 <td><span id="adjustedIncome" class="aln-rt calc-res">0</span></td></tr>
           </table>
           <p class="aln-ctr pt1">
@@ -142,8 +142,8 @@
 
         <div id="step6" class="stepDiv" style="display: none;">
           <h3>Step 6: Shelter Costs</h3>
-          <p>Enter your monthly <strong>shelter costs</strong>.</p>
-          <table id="step6Table">
+          <p class="serif">Enter your monthly <strong>shelter costs</strong>.</p>
+          <table class="serif" id="step6Table">
             <tr><td>List your monthly rent:</td>
                 <td><input id="rent" type="number" min="0" class="inp-wth aln-rt shelt" value="0"></td></tr>
             <tr><td>List your monthly mortgage payment:</td>
@@ -153,7 +153,7 @@
             <tr><td>List your monthly insurance (structure only):</td>
                 <td><input id="insurance" type="number" min="0" class="inp-wth aln-rt shelt" value="0"></td></tr>
             <tr><td>
-            <tr><td>Choose the standard utility allowance that applies:</td>
+            <tr class="summation-row"><td>Choose the standard utility allowance that applies:</td>
                 <td><span id="stdUtilAllow" class="aln-rt calc-res">787</span></td></tr>
             <tr><td class="bot-brd">
                   <table id="utilAllowTable">
@@ -166,11 +166,11 @@
                   </table>
                 </td>
                 <td class="bot-brd"></td></tr>
-            <tr><td class="aln-rt">Total shelter costs:</td>
+            <tr class="summation-row"><td class="aln-rt">Total shelter costs:</td>
                 <td><span id="totSheltCosts" class="aln-rt calc-res">0</span></td></tr>
-            <tr><td class="aln-rt">Shelter deduction:</td>
+            <tr class="summation-row"><td class="aln-rt">Shelter deduction:</td>
                 <td><span id="shelterDeduc" class="aln-rt calc-res">0</span></td></tr>
-            <tr><td class="aln-rt">Monthly net income:</td>
+            <tr class="summation-row"><td class="aln-rt">Monthly net income:</td>
                 <td><span id="monthlyNetInc" class="aln-rt calc-res">0</span></td></tr>
           </table>
           <p class="aln-ctr pt1">
@@ -179,8 +179,8 @@
         </div>
 
         <div id="step7" class="stepDiv" style="display: none;">
-          <h3>3SquaresVT Benefit Allotment</h3>
-          <p>You are entitled to $<span id="benefitAllot" class="bold"></span> per month.</p>
+          <h3 class="tac">3SquaresVT Benefit Allotment</h3>
+          <p class="serif tac final-amount">You are entitled to<br />$<span id="benefitAllot" class="bold"></span><br />per month.</p>
           <p class="aln-ctr pt1">
               <button onclick="moveStep6()">Previous</button></p>
           </div>
