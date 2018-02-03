@@ -1,5 +1,53 @@
+var data = 
+{
+  "StandardDeduction": {
+    "1": 160,
+    "2": 160,
+    "3": 160,
+    "4": 170,
+    "5": 199,
+    "6": 228
+  },
+  "ExpandedGrossMonthlyIncome": {
+    "1": 1860,
+    "2": 2505,
+    "3": 3149,
+    "4": 3793,
+    "5": 4439,
+    "6": 5082,
+    "7": 5762,
+    "8": 6372,
+    "9": 7018,
+    "10": 7633,
+    "Additional": 646
+  },
+  "MedicalStandardDeduction": 138,
+  "MaximumBenefit": {
+    "1": 194,
+    "2": 357,
+    "3": 511,
+    "4": 649,
+    "5": 771,
+    "6": 925,
+    "7": 1022,
+    "8": 1169,
+    "9": 1315,
+    "10": 1461,
+    "Additional": 146    
+  },
+  "UtilityStandard": {
+    "WithHeat": 808,
+    "WithoutHeat": 232,
+    "PhoneOnly": 36
+  }
+};
 
 $(document).ready(function() {
+  $("#allUtils").prop("value", data.UtilityStandard.WithHeat);
+  $("#heatIncluded").prop("value", data.UtilityStandard.WithoutHeat);
+  $("#phoneOnly").prop("value", data.UtilityStandard.PhoneOnly);
+  $("#stdUtilAllow").text(data.UtilityStandard.WithHeat);
+
   $("#numHousehold").on({
     "change": function() {
       try {
@@ -229,29 +277,26 @@ function calcAdjustedIncome() {
 }
 
 function calcGrossIncomeLimit() {
-  var numHousehold = Number($("#numHousehold").val());
-  var limitArr = [1812, 2457, 3097, 3739, 4381, 5021, 5663, 6305, 6947, 7589];
+  var key = $("#numHousehold").val()
+  var nHousehold = Number(key);
   var grossIncLim = 0;
-  if (numHousehold < 11) {
-    grossIncLim = limitArr[numHousehold - 1];
+  if (nHousehold < 11) {
+    grossIncLim = data.ExpandedGrossMonthlyIncome[key]
   }
   else {
-    grossIncLim = limitArr[limitArr.length - 1] + (numHousehold - 10) * 642;
+    grossIncLim = data.ExpandedGrossMonthlyIncome["10"] + (nHousehold - 10) * data.ExpandedGrossMonthlyIncome.Additional;
   }
   return grossIncLim;
 }
 
 function calcStandardDeduction() {
   var result;
-  var numHousehold = Number($("#numHousehold").val());
-  if (numHousehold > 0 && numHousehold < 4) {
-    result = 155;
-  } else if (numHousehold == 4) {
-    result = 168;
-  } else if (numHousehold == 5) {
-    result = 197;
+  var key = $("#numHousehold").val()
+  var nHousehold = Number(key);
+  if (nHousehold < 6) {
+    result = data.StandardDeduction[key]
   } else {
-    result = 226;
+    result = data.StandardDeduction["6"];
   }
   return result;
 }
@@ -260,7 +305,7 @@ function calcMedicalDeduction() {
   medicalExpenses = Number($("#medicalExpenses").val());
   medicalDeduc = 0;
   if (medicalExpenses >= 35 && medicalExpenses <= 173) {
-    medicalDeduc = 138;
+    medicalDeduc = data.MedicalStandardDeduction;
   } else if (medicalExpenses > 173) {
     medicalDeduc = medicalExpenses - 35;
   }
@@ -298,15 +343,15 @@ function calcTotalShelterCosts() {
 }
 
 function calcBenefitAllotment(monthlyNetInc) {
-  var maxBenefitArr = [194, 357, 511, 649, 771, 925, 1022, 1169, 1315, 1461];
-  var numHousehold = Number($("#numHousehold").val());
+  var key = $("#numHousehold").val();
+  var nHousehold = Number(key);
   var maxBenefit = 0;
   var benefit = 0;
-  if (numHousehold > 10) {
-    maxBenefit = maxBenefitArr[maxBenefitArr.length - 1] + (numHousehold - 10) * 146;
+  if (nHousehold < 11) {
+    maxBenefit = data.MaximumBenefit[key];
   }
   else {
-    maxBenefit = maxBenefitArr[numHousehold - 1];
+    maxBenefit = data.MaximumBenefit["10"] + (nHousehold - 10) * data.MaximumBenefit.Additional;
   }
   if (monthlyNetInc <= 0) {
     benefit = maxBenefit;
