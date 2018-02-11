@@ -593,6 +593,10 @@ td {
 	font-weight: 700px;
 }
 
+.wth-yes-no {
+	min-width: 150px;
+}
+
 button {
 	padding: 8px 12px;
 	font-size: 12px;
