@@ -23,17 +23,17 @@ var data =
   },
   "MedicalStandardDeduction": 138,
   "MaximumBenefit": {
-    "1": 194,
-    "2": 357,
-    "3": 511,
-    "4": 649,
-    "5": 771,
-    "6": 925,
-    "7": 1022,
-    "8": 1169,
-    "9": 1315,
-    "10": 1461,
-    "Additional": 146    
+    "1": 192,
+    "2": 352,
+    "3": 504,
+    "4": 640,
+    "5": 760,
+    "6": 913,
+    "7": 1009,
+    "8": 1153,
+    "9": 1297,
+    "10": 1441,
+    "Additional": 144    
   },
   "UtilityStandard": {
     "WithHeat": 808,
@@ -41,6 +41,8 @@ var data =
     "PhoneOnly": 36
   }
 };
+
+var automaticEligible = false;
 
 $(document).ready(function() {
   $("#allUtils").prop("value", data.UtilityStandard.WithHeat);
@@ -107,15 +109,9 @@ function validateStep1() {
 
 function moveStep2() {
   if (validateStep1()) {
-    if ($("#yesSenior").prop("checked")) {
-      $("#grossEarnedIncLabel").text("Gross monthly earned income:");
-      $("#netEarnedIncRow").show();
-      $("#step2FootNote").show();
-    } else {
-      $("#grossEarnedIncLabel").text("Total monthly earned income:")
-      $("#netEarnedIncRow").hide();
-      $("#step2FootNote").hide();
-    }
+    automaticEligible = $("#yesSenior").prop("checked") ||
+                        $("#yesDisabled").prop("checked") ||
+                        $("#yesHelp").prop("checked");
     showDiv("step2");
   }
 }
