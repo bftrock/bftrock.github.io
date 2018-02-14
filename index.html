@@ -109,7 +109,7 @@
       <tr><td class="bot-brd">Other:</td>
           <td class="bot-brd">
             <input type="number" min="0" class="inp-wth aln-rt unearnedInc" value="0"></td></tr>
-      <tr class="summation-row"><td class="aln-rt ">Total unearned income:</td>
+      <tr class="summation-row"><td class="aln-rt ">Total monthly unearned income:</td>
           <td><span id="unearnedIncTotal" class="aln-rt calc-res">0</span></td></tr>
     </table>
   <p class="aln-ctr pt1">
@@ -119,15 +119,20 @@
 
 <div id="step4" class="stepDiv" style="display: none;">
   <h3>Step 4: Eligibility</h3>
+  <div id="automaticEligibleDiv">
+    <p>Based on the information you provided, your household may be eligible for a 3SquaresVT benefit.</p>
+  </div>
+  <div id="incomeTestDiv">
   <table class="serif">
-    <tr class="summation-row"><td class="aln-rt">Total income:</td>
-      <td><span id="totalIncome" class="aln-rt calc-res">0</span></td></tr>
     <tr><td>Your household size of <span class="nhh"></span> has a gross monthly income limit of:</td>
         <td><span id="gil" class="aln-rt calc-res">0</span></td></tr>
     <tr><td>Your total monthly income is:</td>
         <td><span id="tgi" class="aln-rt calc-res">0</span></td></tr>
   </table>
-  <p class="mt1 serif">Your household is <span id="aboveBelow" class="bold"></span> the limit, so <span id="proceedYesNo"></span>.</p> 
+    <p class="mt1 serif">Based on the information you provided, your household is 
+      <span id="aboveBelow" class="bold"></span> the gross income limit, and 
+      <span id="proceedYesNo"></span>.</p>
+  </div>
   <p class="aln-ctr pt1">
     <button class="mr1" onclick="moveStep3()">Previous</button>
     <button class="ml1" id="nextstep4" onclick="moveStep5()">Next</button></p>
@@ -136,9 +141,11 @@
 <div id="step5" class="stepDiv" style="display: none;">
   <h3>Step 5: Deductions</h3>
   <table id="step5Table" class="serif">
-    <tr id="medExpRow"><td>List your monthly medical expenses:</td>
+    <tr><td>Net earned income:</td>
+        <td><span id="netEarnedInc" class="aln-rt calc-res">0</span></td></tr>
+    <tr id="medExpRow"><td>List your monthly out-of-pocket medical expenses:</td>
       <td><input id="medicalExpenses" type="number" min="0" class="inp-wth aln-rt" value="0"></td></tr>
-    <tr><td>List your monthly dependent care costs:</td>
+    <tr><td>List your monthly dependent care costs for all dependents:</td>
         <td><input id="depCareCosts" type="number" min="0" class="inp-wth aln-rt deduc" value="0"></td></tr>
     <tr><td class="bot-brd">List your court-ordered child support payments:</td>
         <td class="bot-brd"><input id="childSupport" type="number" min="0" class="inp-wth aln-rt deduc" value="0"></td></tr>
@@ -169,7 +176,7 @@
     <tr><td>List your monthly insurance (structure only):</td>
         <td><input id="insurance" type="number" min="0" class="inp-wth aln-rt shelt" value="0"></td></tr>
     <tr><td>
-    <tr class="summation-row"><td>Choose the standard utility allowance that applies:</td>
+    <tr class="summation-row"><td>Standard utility allowance:</td>
         <td><span id="stdUtilAllow" class="aln-rt calc-res"></span></td></tr>
     <tr><td class="bot-brd">
           <table id="utilAllowTable">
@@ -196,9 +203,18 @@
 
 <div id="step7" class="stepDiv" style="display: none;">
   <h3 class="tac">3SquaresVT Benefit Allotment</h3>
-  <p class="serif tac final-amount">You are entitled to<br />$<span id="benefitAllot" class="bold"></span><br />per month.</p>
+  <p class="serif tac final-amount">Based on the information you provided, you 
+    may be eligible for a 3SquaresVT benefit of<br>$<span id="benefitAllot" class="bold"></span><br>per 
+    month.</p>
   <p class="aln-ctr pt1">
     <button onclick="moveStep6()">Previous</button></p>
+  <p>Interested in applying? Here are some resources that can help:</p>
+  <ul class="disc">
+    <li>Dial 2-1-1</li>
+    <li>If you are 60 or older, call the <a href="https://www.seniorsolutionsvt.org/services/information-and-assistance/">Senior Help Line</a> at 1-800-642-5119</li>
+    <li>Contact <a href="http://dcf.vermont.gov/mybenefits">DCF's Benefit Service Center</a> at 1-800-479-6151</li>
+    <li>Return to <a href="http://www.vermontfoodhelp.com/">Vermont Fool Help</a></li>
+  </ul>
 </div>
 
       </div>

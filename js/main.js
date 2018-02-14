@@ -1,3 +1,15 @@
+// This javascript module provides all of the code for the functionality of the
+// 3SquaresVT Eligibility Calculator. This file must be included for the
+// calculator to function.
+//
+// Copyright 2018 Hunger Free Vermont
+
+// This is where the data that is used in the calculator is defined. This
+// should be kept up to date by the maintainer of the calculator. When the
+// state releases new numbers, update these values accordingly. This assumes
+// that the basic methods for calculating eligibility remain the same, and that
+// only the values change. If the methods change, the whole calculator will
+// need to be revised and validated.
 var data = 
 {
   "StandardDeduction": {
@@ -42,17 +54,28 @@ var data =
   }
 };
 
+// Module-wide variables
 var automaticEligible = false;
 
+// This function runs as soon as the page is done loading. It hooks up some of
+// the events that fire by user interaction with the calculator. Then it brings
+// us to Step 1.
 $(document).ready(function() {
+
+  // Assign default values in the calculator from data in the data structure at
+  // the top of the file.
   $("#allUtils").prop("value", data.UtilityStandard.WithHeat);
   $("#heatIncluded").prop("value", data.UtilityStandard.WithoutHeat);
   $("#phoneOnly").prop("value", data.UtilityStandard.PhoneOnly);
   $("#stdUtilAllow").text(data.UtilityStandard.WithHeat);
 
+  // Hook up and define the function that runs when the number in household
+  // input changes value
   $("#numHousehold").on({
     "change": function() {
       try {
+        // Check that it's a positive, non-zero integer and raise an alert if
+        // it's not
         getPosInteger($(this).val(), false);
       }
       catch (err) {
@@ -61,41 +84,55 @@ $(document).ready(function() {
     }
   });
 
+  // Hook up and define the function that runs when any of the earned and
+  // unearned income inputs changes value
   $("#step2Table input.earnedInc, #step3Table input.unearnedInc").on({
     "change": function () {
+      // When any input changes, calculate the total income
       calcIncome();
     }
   });
 
+  // Hook up and define the function that runs when any of the deduction inputs
+  // changes value
   $("#step5Table input").on({
     "change": function () {
+      // Calculate adjusted income
       calcAdjustedIncome();
     }
   });
 
+  // Hook up and define the function that runs when any of the shelter cost
+  // inputs changes value
   $("#step6Table input.shelt").on({
     "change": function() {
       calcTotalShelterCosts();
     }
   });
 
-  $("#utilAllowTable input").change(function () {
-    $("#stdUtilAllow").text(this.value);
-    calcTotalShelterCosts();
-  })
-
+  // Default values
   $("#numHousehold").val(1);
   $("#noSenior").prop("checked", true);
+
+  // Hide the table where options for the standard utility allowance are shown.
+  // This is not used in Vermont for now, but could change in the future.
+  $("#utilAllowTable").hide();
+
+  // Move to the first step of the process
   moveStep1();
 });
 
+// Moves us to step 1
 function moveStep1() {
+  // Show the step 1 div
   showDiv("step1");
 }
 
+// Called before we move to step 2
 function validateStep1() {
   var result = false;
   try {
+    // Ensure that number in household is a positive integer
     numHousehold = getPosInteger($("#numHousehold").val(), false);
     $("#numHousehold").val(numHousehold);
     result = true;
@@ -107,8 +144,11 @@ function validateStep1() {
   return result;
 }
 
+// Moves us to step 2
 function moveStep2() {
   if (validateStep1()) {
+    // If any of the radio buttons are set to "yes", set the global variable
+    // to true
     automaticEligible = $("#yesSenior").prop("checked") ||
                         $("#yesDisabled").prop("checked") ||
                         $("#yesHelp").prop("checked");
@@ -116,43 +156,57 @@ function moveStep2() {
   }
 }
 
+// Called before we move to step 3
 function validateStep2() {
   var result = false;
+  // If income calculation is successful (no errors), return true.
   if (calcIncome()) {
     result = true;
   }
   return result;
 }
 
+// If step 2 is valid, move to step 3
 function moveStep3() {
   if (validateStep2()) {
     showDiv("step3");
   }
 }
 
+// Called before we move to step 4
 function validateStep3() {
   var result = false;
+  // If income calculation is successful (no errors), return true.
   if (calcIncome()) {
     result = true;
   }
   return result;
 }
 
+// If step 3 is valid, move to step 4.
 function moveStep4() {
   if (validateStep3()) {
-    $("#step4 span.nhh").text($("#numHousehold").val());
-    var tgi = Number($("#totalIncome").text());
-    var gil = calcGrossIncomeLimit();
-    $("#tgi").text(tgi);
-    $("#gil").text(gil);
-    if (tgi > gil) {
-      $("#aboveBelow").text("above");
-      $("#proceedYesNo").text("you are not eligible for 3SquaresVT");
-      $("#nextstep4").hide();
-    } else {
-      $("#aboveBelow").text("below");
-      $("#proceedYesNo").text("you may proceed to the next step");
-      $("#nextstep4").show();
+    if (automaticEligible) {
+      $("#incomeTestDiv").hide();
+      $("#automaticEligibleDiv").show();
+    }
+    else {
+      $("#automaticEligibleDiv").hide();
+      $("#incomeTestDiv").show();
+      $("#step4 span.nhh").text($("#numHousehold").val());
+      var tgi = Number($("#totalIncome").text());
+      var gil = calcGrossIncomeLimit();
+      $("#tgi").text(tgi);
+      $("#gil").text(gil);
+      if (tgi > gil) {
+        $("#aboveBelow").text("above");
+        $("#proceedYesNo").text("you are not eligible for 3SquaresVT");
+        $("#nextstep4").hide();
+      } else {
+        $("#aboveBelow").text("below");
+        $("#proceedYesNo").text("you may be eligible for 3SquaresVT. You may proceed to the next step");
+        $("#nextstep4").show();
+      }
     }
     showDiv("step4");
   }
@@ -326,7 +380,7 @@ function calcTotalShelterCosts() {
       shelterDeduc = Math.min(shelterDeduc, 504);
     }
     $("#shelterDeduc").text(shelterDeduc);
-    var monthlyNetInc = adjustedIncome - shelterDeduc;
+    var monthlyNetInc = Math.max(0, adjustedIncome - shelterDeduc);
     $("#monthlyNetInc").text(monthlyNetInc);
     $("#benefitAllot").text(calcBenefitAllotment(monthlyNetInc));
     result = true;
