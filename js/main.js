@@ -196,7 +196,6 @@ function moveStep4() {
       $("#step4 span.nhh").text($("#numHousehold").val());
       var tgi = Number($("#totalIncome").text());
       var gil = calcGrossIncomeLimit();
-      $("#tgi").text(tgi);
       $("#gil").text(gil);
       if (tgi > gil) {
         $("#aboveBelow").text("above");
