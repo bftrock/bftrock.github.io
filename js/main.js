@@ -51,7 +51,8 @@ var data =
     "WithHeat": 808,
     "WithoutHeat": 232,
     "PhoneOnly": 36
-  }
+  },
+  "MaximumShelterDeduction": 535
 };
 
 // Module-wide variables
@@ -213,7 +214,7 @@ function moveStep4() {
 
 function moveStep5() {
   $("#step5 span.nhh").text($("#numHousehold").val());
-  if ($("#yesSenior").prop("checked")) {
+  if ($("#yesSenior").prop("checked") || $("#yesDisabled").prop("checked")) {
     $("#medExpRow").show();
     $("#medDedRow").show();
   } else {
@@ -280,12 +281,7 @@ function calcIncome() {
       unearnedInc += getPosNumber($(this).val());
     });
     $("#unearnedIncTotal").text(round(unearnedInc, 0));
-    var hasSenior = $("#yesSenior").prop("checked");
-    if (hasSenior == true) {
-      totalInc = netEarnedInc + unearnedInc;
-    } else {
-      totalInc = earnedInc + unearnedInc;
-    }
+    totalInc = earnedInc + unearnedInc;
     $("#totalIncome").text(round(totalInc, 0));
     return true;
   }
@@ -353,7 +349,7 @@ function calcStandardDeduction() {
 function calcMedicalDeduction() {
   medicalExpenses = Number($("#medicalExpenses").val());
   medicalDeduc = 0;
-  if (medicalExpenses >= 35 && medicalExpenses <= 173) {
+  if ((medicalExpenses >= 35) && (medicalExpenses <= 173)) {
     medicalDeduc = data.MedicalStandardDeduction;
   } else if (medicalExpenses > 173) {
     medicalDeduc = medicalExpenses - 35;
@@ -376,7 +372,7 @@ function calcTotalShelterCosts() {
     var excessShelterCost = shelterCosts - adjustedIncome / 2;
     shelterDeduc = Math.max(0, excessShelterCost);
     if ($("#yesSenior").prop("checked") == false) {
-      shelterDeduc = Math.min(shelterDeduc, 504);
+      shelterDeduc = Math.min(shelterDeduc, data.MaximumShelterDeduction);
     }
     $("#shelterDeduc").text(shelterDeduc);
     var monthlyNetInc = Math.max(0, adjustedIncome - shelterDeduc);
