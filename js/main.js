@@ -399,25 +399,25 @@ function calcBenefitAllotment(monthlyNetInc) {
     maxBenefit = data.MaximumBenefit["10"] + (nHousehold - 10) * data.MaximumBenefit.Additional;
   }
   if (monthlyNetInc <= 0) {
-    ben = maxBenefit;
+    benefit = maxBenefit;
   }
   else {
-    ben = maxBenefit - (0.3 * monthlyNetInc);
-    if (ben < 15) {
+    benefit = maxBenefit - (0.3 * monthlyNetInc);
+    if (benefit < 15) {
       if ((nHousehold == 1 && monthlyNetInc < 1661) ||
           (nHousehold == 2 && monthlyNetInc < 2234)) {
-        ben = 15;
+        benefit = 15;
       }
       else {
-        ben = Math.max(0, ben);
+        benefit = Math.max(0, benefit);
       }
     }
   }
-  ben = Math.floor(ben);
-  if (ben == 1 || ben == 3 || ben == 5) {
-    ben += 1;
+  benefit = Math.floor(benefit);
+  if (benefit == 1 || benefit == 3 || benefit == 5) {
+    benefit += 1;
   }
-  return ben;
+  return benefit;
 }
 
 function getNumber(value) {
