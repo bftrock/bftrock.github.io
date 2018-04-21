@@ -32,7 +32,7 @@
 
     <div class="row">
       <div class="col-12 col-md-6 offset-md-3">
-        
+
 <div id="step1" class="stepDiv" style="display: none;">
   <h3>Step 1: Household</h3>
   <table id="step1Table" class="serif">
@@ -129,8 +129,8 @@
     <tr><td>Your total monthly income is:</td>
         <td><span id="totalIncome" class="aln-rt calc-res">0</span></td></tr>
   </table>
-    <p class="mt1 serif">Based on the information you provided, your household is 
-      <span id="aboveBelow" class="bold"></span> the gross income limit, and 
+    <p class="mt1 serif">Based on the information you provided, your household is
+      <span id="aboveBelow" class="bold"></span> the gross income limit, and
       <span id="proceedYesNo"></span>.</p>
   </div>
   <p class="aln-ctr pt1">
@@ -203,9 +203,10 @@
 
 <div id="step7" class="stepDiv" style="display: none;">
   <h3 class="tac">3SquaresVT Benefit Allotment</h3>
-  <p class="serif tac final-amount">Based on the information you provided, you 
-    may be eligible for a 3SquaresVT benefit of<br>$<span id="benefitAllot" class="bold"></span><br>per 
-    month.</p>
+  <p class="serif tac final-amount">Based on the information you provided,
+    <span id="isEligible">you may be eligible for a 3SquaresVT benefit of<br>$<span id="benefitAllot" class="bold"></span><br>per month.</span>
+    <span id="notEligible" style="display: none;">you may not currently qualify for a 3SquaresVT benefit. Please check again if your income decreases or your expenses increase.</span>
+  </p>
   <p class="aln-ctr pt1">
     <button onclick="moveStep6()">Previous</button></p>
   <p>Interested in applying? Here are some resources that can help:</p>
@@ -220,12 +221,12 @@
       </div>
     </div>
   </div>
-  
+
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="js/plugins.js"></script>
   <script src="js/main.js"></script>
 
- 
+
 </body>
 </html>

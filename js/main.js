@@ -10,7 +10,7 @@
 // that the basic methods for calculating eligibility remain the same, and that
 // only the values change. If the methods change, the whole calculator will
 // need to be revised and validated.
-var data = 
+var data =
 {
   "StandardDeduction": {
     "1": 160,
@@ -45,7 +45,7 @@ var data =
     "8": 1153,
     "9": 1297,
     "10": 1441,
-    "Additional": 144    
+    "Additional": 144
   },
   "UtilityStandard": {
     "WithHeat": 808,
@@ -364,7 +364,7 @@ function calcTotalShelterCosts() {
     var shelterCosts = 0;
     $("#step6Table input.shelt").each(function(i) {
       offendingInput = $(this);
-      shelterCosts += getPosNumber($(this).val(), true); 
+      shelterCosts += getPosNumber($(this).val(), true);
     });
     shelterCosts += Number($("#stdUtilAllow").text());
     $("#totSheltCosts").text(round(shelterCosts, 0));
@@ -377,7 +377,15 @@ function calcTotalShelterCosts() {
     $("#shelterDeduc").text(shelterDeduc);
     var monthlyNetInc = Math.max(0, adjustedIncome - shelterDeduc);
     $("#monthlyNetInc").text(monthlyNetInc);
-    $("#benefitAllot").text(calcBenefitAllotment(monthlyNetInc));
+    var beneAllot = calcBenefitAllotment(monthlyNetInc);
+    if (beneAllot > 0) {
+      $("#isEligible").show();
+      $("#notEligible").hide();
+      $("#benefitAllot").text(calcBenefitAllotment(monthlyNetInc));
+    } else {
+      $("#isEligible").hide();
+      $("#notEligible").show();
+    }
     result = true;
   }
   catch (err) {
