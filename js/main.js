@@ -13,46 +13,46 @@
 var data =
 {
   "StandardDeduction": {
-    "1": 160,
-    "2": 160,
-    "3": 160,
-    "4": 170,
-    "5": 199,
-    "6": 228
+    "1": 164,
+    "2": 164,
+    "3": 164,
+    "4": 174,
+    "5": 204,
+    "6": 234
   },
   "ExpandedGrossMonthlyIncome": {
-    "1": 1860,
-    "2": 2505,
-    "3": 3149,
-    "4": 3793,
-    "5": 4439,
-    "6": 5082,
-    "7": 5762,
-    "8": 6372,
-    "9": 7018,
-    "10": 7633,
-    "Additional": 646
+    "1": 1873,
+    "2": 2539,
+    "3": 3205,
+    "4": 3871,
+    "5": 4537,
+    "6": 5203,
+    "7": 5869,
+    "8": 6535,
+    "9": 7201,
+    "10": 7867,
+    "Additional": 666
   },
-  "MedicalStandardDeduction": 138,
+  "MedicalStandardDeduction": 116,
   "MaximumBenefit": {
     "1": 192,
-    "2": 352,
-    "3": 504,
-    "4": 640,
-    "5": 760,
-    "6": 913,
-    "7": 1009,
-    "8": 1153,
-    "9": 1297,
-    "10": 1441,
+    "2": 353,
+    "3": 505,
+    "4": 642,
+    "5": 762,
+    "6": 914,
+    "7": 1011,
+    "8": 1155,
+    "9": 1299,
+    "10": 1443,
     "Additional": 144
   },
   "UtilityStandard": {
-    "WithHeat": 808,
-    "WithoutHeat": 232,
+    "WithHeat": 822,
+    "WithoutHeat": 235,
     "PhoneOnly": 36
   },
-  "MaximumShelterDeduction": 535
+  "MaximumShelterDeduction": 552
 };
 
 // Module-wide variables
