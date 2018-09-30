@@ -412,8 +412,8 @@ function calcBenefitAllotment(monthlyNetInc) {
   else {
     benefit = maxBenefit - (0.3 * monthlyNetInc);
     if (benefit < 15) {
-      if ((nHousehold == 1 && monthlyNetInc < 1661) ||
-          (nHousehold == 2 && monthlyNetInc < 2234)) {
+      if ((nHousehold == 1 && monthlyNetInc < 1671) ||
+          (nHousehold == 2 && monthlyNetInc < 2267)) {
         benefit = 15;
       }
       else {
@@ -422,9 +422,6 @@ function calcBenefitAllotment(monthlyNetInc) {
     }
   }
   benefit = Math.floor(benefit);
-  if (benefit == 1 || benefit == 3 || benefit == 5) {
-    benefit += 1;
-  }
   return benefit;
 }
 
