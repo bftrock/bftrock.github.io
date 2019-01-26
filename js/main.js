@@ -159,12 +159,7 @@ function moveStep2() {
 
 // Called before we move to step 3
 function validateStep2() {
-  var result = false;
-  // If income calculation is successful (no errors), return true.
-  if (calcIncome()) {
-    result = true;
-  }
-  return result;
+  return calcIncome();
 }
 
 // If step 2 is valid, move to step 3
@@ -176,12 +171,7 @@ function moveStep3() {
 
 // Called before we move to step 4
 function validateStep3() {
-  var result = false;
-  // If income calculation is successful (no errors), return true.
-  if (calcIncome()) {
-    result = true;
-  }
-  return result;
+  return calcIncome();
 }
 
 // If step 3 is valid, move to step 4.
@@ -226,11 +216,7 @@ function moveStep5() {
 }
 
 function validateStep5() {
-  var result = false;
-  if (calcAdjustedIncome()) {
-    result = true;
-  }
-  return result;
+  return calcAdjustedIncome();
 }
 
 function moveStep6() {
@@ -241,11 +227,7 @@ function moveStep6() {
 }
 
 function validateStep6() {
-  var result = false;
-  if (calcTotalShelterCosts()) {
-    result = true;
-  }
-  return result;
+  return calcTotalShelterCosts();
 }
 
 function moveStep7() {
@@ -296,7 +278,7 @@ function calcAdjustedIncome() {
   var result = false;
   try {
     var netEarnedInc = Number($("#netEarnedInc").text());
-    var unearnedInc = Number($("#unearnedInc").text());
+    var unearnedInc = Number($("#unearnedIncTotal").text());
     var incBeforeDed = unearnedInc + netEarnedInc;
     var standardDeduc = calcStandardDeduction();
     var totalDeduc = standardDeduc;
