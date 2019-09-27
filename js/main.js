@@ -53,8 +53,8 @@ var data =
     "PhoneOnly": 36
   },
   "MaximumShelterDeduction": 569,
-  "NumHH1ClampIncome": 1671,
-  "NumHH2ClampIncome": 2267,
+  "NumHH1ClampNetIncome": 1671,
+  "NumHH2ClampNetIncome": 2267,
   "MinMedicalExpenses": 35,
   "MaxMedicalExpenses": 151
 };
