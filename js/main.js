@@ -13,46 +13,50 @@
 var data =
 {
   "StandardDeduction": {
-    "1": 164,
-    "2": 164,
-    "3": 164,
-    "4": 174,
-    "5": 204,
-    "6": 234
+    "1": 167,
+    "2": 167,
+    "3": 167,
+    "4": 178,
+    "5": 209,
+    "6": 240
   },
   "ExpandedGrossMonthlyIncome": {
-    "1": 1873,
-    "2": 2539,
-    "3": 3205,
-    "4": 3871,
-    "5": 4537,
-    "6": 5203,
-    "7": 5869,
-    "8": 6535,
-    "9": 7201,
-    "10": 7867,
-    "Additional": 666
+    "1": 1926,
+    "2": 2609,
+    "3": 3290,
+    "4": 3971,
+    "5": 4653,
+    "6": 5334,
+    "7": 6015,
+    "8": 6697,
+    "9": 7380,
+    "10": 8063,
+    "Additional": 683
   },
   "MedicalStandardDeduction": 116,
   "MaximumBenefit": {
-    "1": 192,
-    "2": 353,
-    "3": 505,
-    "4": 642,
-    "5": 762,
-    "6": 914,
-    "7": 1011,
-    "8": 1155,
-    "9": 1299,
-    "10": 1443,
-    "Additional": 144
+    "1": 194,
+    "2": 355,
+    "3": 509,
+    "4": 646,
+    "5": 768,
+    "6": 921,
+    "7": 1018,
+    "8": 1164,
+    "9": 1310,
+    "10": 1456,
+    "Additional": 146
   },
   "UtilityStandard": {
     "WithHeat": 822,
     "WithoutHeat": 235,
     "PhoneOnly": 36
   },
-  "MaximumShelterDeduction": 552
+  "MaximumShelterDeduction": 569,
+  "NumHH1ClampNetIncome": 1671,
+  "NumHH2ClampNetIncome": 2267,
+  "MinMedicalExpenses": 35,
+  "MaxMedicalExpenses": 151
 };
 
 // Module-wide variables
@@ -331,10 +335,10 @@ function calcStandardDeduction() {
 function calcMedicalDeduction() {
   medicalExpenses = Number($("#medicalExpenses").val());
   medicalDeduc = 0;
-  if ((medicalExpenses >= 35) && (medicalExpenses <= 173)) {
+  if ((medicalExpenses >= data.MinMedicalExpenses) && (medicalExpenses <= data.MaxMedicalExpenses)) {
     medicalDeduc = data.MedicalStandardDeduction;
-  } else if (medicalExpenses > 173) {
-    medicalDeduc = medicalExpenses - 35;
+  } else if (medicalExpenses > data.MaxMedicalExpenses) {
+    medicalDeduc = medicalExpenses - data.MinMedicalExpenses;
   }
   return medicalDeduc;
 }
@@ -394,8 +398,8 @@ function calcBenefitAllotment(monthlyNetInc) {
   else {
     benefit = maxBenefit - (0.3 * monthlyNetInc);
     if (benefit < 15) {
-      if ((nHousehold == 1 && monthlyNetInc < 1671) ||
-          (nHousehold == 2 && monthlyNetInc < 2267)) {
+      if ((nHousehold == 1 && monthlyNetInc < data.NumHH1ClampNetIncome) ||
+          (nHousehold == 2 && monthlyNetInc < data.NumHH2ClampNetIncome)) {
         benefit = 15;
       }
       else {
