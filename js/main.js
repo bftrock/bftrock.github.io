@@ -52,7 +52,11 @@ var data =
     "WithoutHeat": 235,
     "PhoneOnly": 36
   },
-  "MaximumShelterDeduction": 569
+  "MaximumShelterDeduction": 569,
+  "NumHH1ClampIncome": 1671,
+  "NumHH2ClampIncome": 2267,
+  "MinMedicalExpenses": 35,
+  "MaxMedicalExpenses": 151
 };
 
 // Module-wide variables
@@ -331,10 +335,10 @@ function calcStandardDeduction() {
 function calcMedicalDeduction() {
   medicalExpenses = Number($("#medicalExpenses").val());
   medicalDeduc = 0;
-  if ((medicalExpenses >= 35) && (medicalExpenses <= 151)) {
+  if ((medicalExpenses >= data.MinMedicalExpenses) && (medicalExpenses <= data.MaxMedicalExpenses)) {
     medicalDeduc = data.MedicalStandardDeduction;
-  } else if (medicalExpenses > 151) {
-    medicalDeduc = medicalExpenses - 35;
+  } else if (medicalExpenses > data.MaxMedicalExpenses) {
+    medicalDeduc = medicalExpenses - data.MinMedicalExpenses;
   }
   return medicalDeduc;
 }
@@ -394,8 +398,8 @@ function calcBenefitAllotment(monthlyNetInc) {
   else {
     benefit = maxBenefit - (0.3 * monthlyNetInc);
     if (benefit < 15) {
-      if ((nHousehold == 1 && monthlyNetInc < 1671) ||
-          (nHousehold == 2 && monthlyNetInc < 2267)) {
+      if ((nHousehold == 1 && monthlyNetInc < data.NumHH1ClampNetIncome) ||
+          (nHousehold == 2 && monthlyNetInc < data.NumHH2ClampNetIncome)) {
         benefit = 15;
       }
       else {
