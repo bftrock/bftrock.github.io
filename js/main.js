@@ -55,6 +55,8 @@ var data =
   "MaximumShelterDeduction": 569,
   "MaxNetIncome1": 1720,
   "MaxNetIncome2": 2326,
+  "MinBenefit1and2": 16,
+  "MinVtBenefit": 15,
   "MinMedicalExpenses": 35,
   "MaxMedicalExpenses": 151
 };
@@ -397,12 +399,12 @@ function calcBenefitAllotment(monthlyNetInc) {
   }
   else {
     benefit = maxBenefit - (0.3 * monthlyNetInc);
-    if (benefit < 16) {
+    if (benefit < data.MinBenefit1and2) {
       if ((nHousehold == 1 && monthlyNetInc <= data.MaxNetIncome1) ||
           (nHousehold == 2 && monthlyNetInc <= data.MaxNetIncome2)) {
-        benefit = 16;
+        benefit = data.MinBenefit1and2;
       }
-      else if (nHousehold > 2 && benefit < 15 && benefit > 0) {
+      else if (nHousehold > 2 && benefit < data.MinVtBenefit && benefit > 0) {
         benefit = 0
       }
       else {
