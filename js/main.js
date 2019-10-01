@@ -53,8 +53,8 @@ var data =
     "PhoneOnly": 36
   },
   "MaximumShelterDeduction": 569,
-  "NumHH1ClampNetIncome": 1671,
-  "NumHH2ClampNetIncome": 2267,
+  "MaxNetIncome1": 1720,
+  "MaxNetIncome2": 2326,
   "MinMedicalExpenses": 35,
   "MaxMedicalExpenses": 151
 };
@@ -398,8 +398,8 @@ function calcBenefitAllotment(monthlyNetInc) {
   else {
     benefit = maxBenefit - (0.3 * monthlyNetInc);
     if (benefit < 16) {
-      if ((nHousehold == 1 && monthlyNetInc < data.NumHH1ClampNetIncome) ||
-          (nHousehold == 2 && monthlyNetInc < data.NumHH2ClampNetIncome)) {
+      if ((nHousehold == 1 && monthlyNetInc <= data.MaxNetIncome1) ||
+          (nHousehold == 2 && monthlyNetInc <= data.MaxNetIncome2)) {
         benefit = 16;
       }
       else if (nHousehold > 2 && benefit < 15 && benefit > 0) {
