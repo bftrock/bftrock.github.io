@@ -63,6 +63,7 @@ var data =
 
 // Module-wide variables
 var automaticEligible = false;
+var zeroBenefitEligible = false;
 
 // This function runs as soon as the page is done loading. It hooks up some of
 // the events that fire by user interaction with the calculator. Then it brings
@@ -368,11 +369,19 @@ function calcTotalShelterCosts() {
     var beneAllot = calcBenefitAllotment(monthlyNetInc);
     if (beneAllot > 0) {
       $("#isEligible").show();
+      $("#zeroBenefit").hide();
       $("#notEligible").hide();
       $("#benefitAllot").text(calcBenefitAllotment(monthlyNetInc));
     } else {
-      $("#isEligible").hide();
-      $("#notEligible").show();
+      if (zeroBenefitEligible) {
+        $("#isEligible").hide();
+        $("#zeroBenefit").show();
+        $("#notEligible").hide();
+      } else {
+        $("#isEligible").hide();
+        $("#zeroBenefit").hide();
+        $("#notEligible").show();
+      }
     }
     result = true;
   }
@@ -403,12 +412,15 @@ function calcBenefitAllotment(monthlyNetInc) {
       if ((nHousehold == 1 && monthlyNetInc <= data.MaxNetIncome1) ||
           (nHousehold == 2 && monthlyNetInc <= data.MaxNetIncome2)) {
         benefit = data.MinBenefit1and2;
+        zeroBenefitEligible = false;
       }
       else if (nHousehold > 2 && benefit < data.MinVtBenefit && benefit > 0) {
         benefit = 0
+        zeroBenefitEligible = true;
       }
       else {
         benefit = Math.max(0, benefit);
+        zeroBenefitEligible = false;
       }
     }
   }
