@@ -425,6 +425,10 @@ function calcBenefitAllotment(monthlyNetInc) {
     }
   }
   benefit = Math.floor(benefit);
+  // During the Covid pandemic, anybody who is eligible to receive any benefit gets the max benefit
+  if (benefit < maxBenefit && !zeroBenefitEligible) {
+    benefit = maxBenefit;
+  }
   return benefit;
 }
 
