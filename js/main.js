@@ -16,49 +16,51 @@ var data =
     "1": 167,
     "2": 167,
     "3": 167,
-    "4": 178,
-    "5": 209,
-    "6": 240
+    "4": 181,
+    "5": 212,
+    "6": 243
   },
   "ExpandedGrossMonthlyIncome": {
-    "1": 1926,
-    "2": 2609,
-    "3": 3290,
-    "4": 3971,
-    "5": 4653,
-    "6": 5334,
-    "7": 6015,
-    "8": 6697,
-    "9": 7380,
-    "10": 8063,
-    "Additional": 683
+    "1": 1969,
+    "2": 2659,
+    "3": 3349,
+    "4": 4041,
+    "5": 4731,
+    "6": 5421,
+    "7": 6113,
+    "8": 6803,
+    "9": 7495,
+    "10": 8187,
+    "Additional": 692
   },
   "MedicalStandardDeduction": 116,
   "MaximumBenefit": {
-    "1": 194,
-    "2": 355,
-    "3": 509,
-    "4": 646,
-    "5": 768,
-    "6": 921,
-    "7": 1018,
-    "8": 1164,
-    "9": 1310,
-    "10": 1456,
-    "Additional": 146
+    "1": 204,
+    "2": 374,
+    "3": 535,
+    "4": 680,
+    "5": 807,
+    "6": 969,
+    "7": 1071,
+    "8": 1224,
+    "9": 1377,
+    "10": 1530,
+    "Additional": 153
   },
   "UtilityStandard": {
     "WithHeat": 822,
     "WithoutHeat": 235,
     "PhoneOnly": 36
   },
-  "MaximumShelterDeduction": 569,
+  "MaximumShelterDeduction": 586,
   "MaxNetIncome1": 1720,
   "MaxNetIncome2": 2326,
   "MinBenefit1and2": 16,
   "MinVtBenefit": 15,
   "MinMedicalExpenses": 35,
-  "MaxMedicalExpenses": 151
+  "MaxMedicalExpenses": 151,
+  "EarnedIncomeDeduction": 0.2,
+  "SeniorAge": 60
 };
 
 // Module-wide variables
@@ -76,6 +78,7 @@ $(document).ready(function() {
   $("#heatIncluded").prop("value", data.UtilityStandard.WithoutHeat);
   $("#phoneOnly").prop("value", data.UtilityStandard.PhoneOnly);
   $("#stdUtilAllow").text(data.UtilityStandard.WithHeat);
+  $("#seniorAge").text(data.SeniorAge);
 
   // Hook up and define the function that runs when the number in household
   // input changes value
@@ -262,7 +265,7 @@ function calcIncome() {
       earnedInc += getPosNumber($(this).val());
     });
     $("#grossEarnedInc").text(round(earnedInc, 0));
-    var netEarnedInc = 0.8 * earnedInc;
+    var netEarnedInc = (1 - data.EarnedIncomeDeduction) * earnedInc;
     $("#netEarnedInc").text(round(netEarnedInc, 0));
     var unearnedInc = 0;
     $("#step3Table input.unearnedInc").each(function() {
