@@ -35,17 +35,13 @@ var data =
   },
   "MedicalStandardDeduction": 116,
   "MaximumBenefit": {
-    "1": 204,
-    "2": 374,
-    "3": 535,
-    "4": 680,
-    "5": 807,
-    "6": 969,
-    "7": 1071,
-    "8": 1224,
-    "9": 1377,
-    "10": 1530,
-    "Additional": 153
+    "1": 234,
+    "2": 430,
+    "3": 616,
+    "4": 782,
+    "5": 929,
+    "6": 1114,
+    "Additional": 176
   },
   "UtilityStandard": {
     "WithHeat": 822,
@@ -400,11 +396,11 @@ function calcBenefitAllotment(monthlyNetInc) {
   var nHousehold = Number(key);
   var maxBenefit = 0;
   var benefit = 0;
-  if (nHousehold < 11) {
+  if (nHousehold < 7) {
     maxBenefit = data.MaximumBenefit[key];
   }
   else {
-    maxBenefit = data.MaximumBenefit["10"] + (nHousehold - 10) * data.MaximumBenefit.Additional;
+    maxBenefit = data.MaximumBenefit["6"] + (nHousehold - 6) * data.MaximumBenefit.Additional;
   }
   if (monthlyNetInc <= 0) {
     benefit = maxBenefit;
