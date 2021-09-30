@@ -52,7 +52,7 @@ var data =
     "WithoutHeat": 250,
     "PhoneOnly": 36
   },
-  "MaximumShelterDeduction": 586,
+  "MaximumShelterDeduction": 597,
   "HomelessShelterDeduction": 159.73,
   "MaxNetIncome1": 1720,
   "MaxNetIncome2": 2326,
