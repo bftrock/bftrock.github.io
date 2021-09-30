@@ -37,7 +37,14 @@
   <h3>Step 1: Household</h3>
   <table id="step1Table" class="serif">
     <tr>
-      <td>How many people are in your household (and buy and eat meals together)?</td>
+      <td>Are you experiencing homelessness?</td>
+      <td class="wth-yes-no">
+        <input type="radio" name="isHomeless" id="yesHomeless"><label for="yesHomeless">Yes</label>
+        <input type="radio" name="isHomeless" id="noHomeless" checked="checked"><label for="noHomeless">No</label>
+      </td>
+    </tr>
+    <tr>
+      <td>How many people do you live with who buy and eat meals with you?</td>
       <td><input id="numHousehold" type="number" min="1" value="1" class="inp-wth aln-rt"></td>
     </tr>
     <tr>
@@ -210,8 +217,7 @@
   </p>
   <p class="aln-ctr pt1">
     <button onclick="moveStep6()">Previous</button></p>
-    <p>Due to Vermont's State of Emergency, ALL 3SquaresVT households will now be automatically receiving the maximum monthly benefit amount for their household size. You do not need to do anything to get this increase.</p>
-    <p>If you are already enrolled in 3SquaresVT but did not get the maximum monthly allotment, you will be issued the difference. Please note that households already receiving the maximum monthly benefit or a zero dollar benefit will not see an increase.</p>
+    <p>ALL 3SquaresVT households currently receive the maximum monthly benefit amount for their household size due to flexibilities related to the pandemic. You do not need to do anything to get this increase.</p>
     <p>Help is available! To get help applying dial 2-1-1 or text ‘VFBSNAP’ to 855-11. If you are 60 or older, call the Helpline at 1-800-642-5119 for personalized assistance.</p>
   </div>
 

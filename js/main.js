@@ -13,45 +13,50 @@
 var data =
 {
   "StandardDeduction": {
-    "1": 167,
-    "2": 167,
-    "3": 167,
-    "4": 181,
-    "5": 212,
-    "6": 243
+    "1": 177,
+    "2": 177,
+    "3": 177,
+    "4": 184,
+    "5": 215,
+    "6": 246
   },
   "ExpandedGrossMonthlyIncome": {
-    "1": 1969,
-    "2": 2659,
-    "3": 3349,
-    "4": 4041,
-    "5": 4731,
-    "6": 5421,
-    "7": 6113,
-    "8": 6803,
-    "9": 7495,
-    "10": 8187,
-    "Additional": 692
+    "1": 1986,
+    "2": 2686,
+    "3": 3386,
+    "4": 4086,
+    "5": 4786,
+    "6": 5486,
+    "7": 6186,
+    "8": 6886,
+    "9": 7586,
+    "10": 8286,
+    "Additional": 700
   },
   "MedicalStandardDeduction": 116,
   "MaximumBenefit": {
-    "1": 234,
-    "2": 430,
-    "3": 616,
-    "4": 782,
-    "5": 929,
-    "6": 1114,
+    "1": 250,
+    "2": 459,
+    "3": 658,
+    "4": 835,
+    "5": 991,
+    "6": 1190,
+    "7": 1316,
+    "8": 1504,
+    "9": 1692,
+    "10": 1880,
     "Additional": 176
   },
   "UtilityStandard": {
-    "WithHeat": 822,
-    "WithoutHeat": 235,
+    "WithHeat": 875,
+    "WithoutHeat": 250,
     "PhoneOnly": 36
   },
   "MaximumShelterDeduction": 586,
+  "HomelessShelterDeduction": 159.73,
   "MaxNetIncome1": 1720,
   "MaxNetIncome2": 2326,
-  "MinBenefit1and2": 16,
+  "MinBenefit1and2": 20,
   "MinVtBenefit": 15,
   "MinMedicalExpenses": 35,
   "MaxMedicalExpenses": 151,
@@ -359,8 +364,13 @@ function calcTotalShelterCosts() {
     var adjustedIncome = Number($("#adjustedIncome").text());
     var excessShelterCost = shelterCosts - adjustedIncome / 2;
     shelterDeduc = Math.max(0, excessShelterCost);
-    if ($("#yesSenior").prop("checked") == false) {
-      shelterDeduc = Math.min(shelterDeduc, data.MaximumShelterDeduction);
+    if (($("#noSenior").prop("checked") == true) && ($("#noDisabled").prop("checked") == true)) {
+      if ($("#noHomeless").prop("checked") == true) {
+        shelterDeduc = Math.min(shelterDeduc, data.MaximumShelterDeduction);
+      }
+      else {
+        shelterDeduc = Math.min(shelterDeduc, data.HomelessShelterDeduction);
+      }
     }
     $("#shelterDeduc").text(shelterDeduc);
     var monthlyNetInc = Math.max(0, adjustedIncome - shelterDeduc);
@@ -396,11 +406,11 @@ function calcBenefitAllotment(monthlyNetInc) {
   var nHousehold = Number(key);
   var maxBenefit = 0;
   var benefit = 0;
-  if (nHousehold < 7) {
+  if (nHousehold < 11) {
     maxBenefit = data.MaximumBenefit[key];
   }
   else {
-    maxBenefit = data.MaximumBenefit["6"] + (nHousehold - 6) * data.MaximumBenefit.Additional;
+    maxBenefit = data.MaximumBenefit["10"] + (nHousehold - 10) * data.MaximumBenefit.Additional;
   }
   if (monthlyNetInc <= 0) {
     benefit = maxBenefit;
