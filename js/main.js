@@ -53,6 +53,7 @@ var data =
     "PhoneOnly": 36
   },
   "MaximumShelterDeduction": 586,
+  "HomelessShelterDeduction": 159.73,
   "MaxNetIncome1": 1720,
   "MaxNetIncome2": 2326,
   "MinBenefit1and2": 20,
@@ -363,8 +364,13 @@ function calcTotalShelterCosts() {
     var adjustedIncome = Number($("#adjustedIncome").text());
     var excessShelterCost = shelterCosts - adjustedIncome / 2;
     shelterDeduc = Math.max(0, excessShelterCost);
-    if ($("#yesSenior").prop("checked") == false) {
-      shelterDeduc = Math.min(shelterDeduc, data.MaximumShelterDeduction);
+    if (($("#noSenior").prop("checked") == true) && ($("#noDisabled").prop("checked") == true)) {
+      if ($("#noHomeless").prop("checked") == true) {
+        shelterDeduc = Math.min(shelterDeduc, data.MaximumShelterDeduction);
+      }
+      else {
+        shelterDeduc = Math.min(shelterDeduc, data.HomelessShelterDeduction);
+      }
     }
     $("#shelterDeduc").text(shelterDeduc);
     var monthlyNetInc = Math.max(0, adjustedIncome - shelterDeduc);
